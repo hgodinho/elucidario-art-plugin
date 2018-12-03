@@ -48,7 +48,7 @@ class Acervo_Emak
          * ***
          * @version 0.8
          * action reativada para versão `0.8` para que seja possível importar
-		 * o meta-box na ativação do plugin.
+         * o meta-box na ativação do plugin.
          * */
         add_action('tgmpa_register', array($this, 'check_required_plugins'));
 
@@ -67,6 +67,11 @@ class Acervo_Emak
         add_filter('rwmb_meta_boxes', array($this, 'autor_metabox'));
 
         /**
+         * Cria relações usando meta-box
+         */
+        add_action('mb_relationships_init', array($this, 'cria_relacoes'));
+
+        /**
          * Configuração do ACF
          *
          * @since 0.7
@@ -77,7 +82,7 @@ class Acervo_Emak
         //add_filter('acf/settings/show_admin', '__return_false');
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
-        add_filter('acf/update_value/name=autoria-bidirecional', 'bidirectional_acf_update_value', 10, 3);
+        //add_filter('acf/update_value/name=autoria_bidirecional', 'bidirectional_acf_update_value', 10, 3);
     }
 
     /**
@@ -93,6 +98,14 @@ class Acervo_Emak
             array(
                 'name' => 'Meta Box',
                 'slug' => 'meta-box',
+                'required' => true,
+                'force_activation' => true,
+                'dismissable' => false,
+            ),
+            /** MB Relationships @since 0.8 */
+            array(
+                'name' => 'Meta Box Relationships',
+                'slug' => 'mb-relationships',
                 'required' => true,
                 'force_activation' => true,
                 'dismissable' => false,
@@ -181,8 +194,34 @@ class Acervo_Emak
             'obras',
             array(
                 'labels' => array(
-                    'name' => 'Obras',
-                    'singular_name' => 'Obras',
+                    'name' => __('Obras'),
+                    'singular_name' => __('Obras'),
+                    'menu_name' => __('Obras', 'text_domain'),
+                    'name_admin_bar' => __('Obras', 'text_domain'),
+                    'archives' => __('Arquivo de Obras', 'text_domain'),
+                    'attributes' => __('Item Attributes', 'text_domain'),
+                    'parent_item_colon' => __('Parent Item:', 'text_domain'),
+                    'all_items' => __('Todas as obras', 'text_domain'),
+                    'add_new_item' => __('Adicionar Nova Obra', 'text_domain'),
+                    'add_new' => __('Adicionar nova obra', 'text_domain'),
+                    'new_item' => __('Nova Obra', 'text_domain'),
+                    'edit_item' => __('Editar Obra', 'text_domain'),
+                    'update_item' => __('Atualizar Obra', 'text_domain'),
+                    'view_item' => __('Ver Obra', 'text_domain'),
+                    'view_items' => __('Ver Obras', 'text_domain'),
+                    'search_items' => __('Pesquisar Obra', 'text_domain'),
+                    'not_found' => __('Não Encontrada', 'text_domain'),
+                    'not_found_in_trash' => __('Nada encontrado na lixeira', 'text_domain'),
+                    'featured_image' => __('Imagem destacada', 'text_domain'),
+                    'set_featured_image' => __('Inserir imagem destacada', 'text_domain'),
+                    'remove_featured_image' => __('Remover imagem destacada', 'text_domain'),
+                    'use_featured_image' => __('Usar como imagem destacada', 'text_domain'),
+                    'insert_into_item' => __('Insert into item', 'text_domain'),
+                    'uploaded_to_this_item' => __('Uploaded to this item', 'text_domain'),
+                    'items_list' => __('Items list', 'text_domain'),
+                    'items_list_navigation' => __('Items list navigation', 'text_domain'),
+                    'filter_items_list' => __('Filter items list', 'text_domain'),
+
                 ),
                 'description' => 'Post para cadastro de obras',
                 'supports' => array(
@@ -201,12 +240,44 @@ class Acervo_Emak
             )
         );
         /** registra autores */
+        /**
+         * @since 0.8
+         * - removi o hierchical para não gerar lentidão no server
+         * @source https://woorkup.com/beware-the-100-page-wordpress-limitation/
+         * O wordpress tem um limite de 100 páginas e
+         * `hierchical => true` gera páginas ao invés de posts
+         */
         register_post_type(
             'autores',
             array(
                 'labels' => array(
-                    'name' => 'Autores',
-                    'singular_name' => 'Autor',
+                    'name' => __('Autores'),
+                    'singular_name' => __('Autor'),
+                    'menu_name' => __('Autores', 'text_domain'),
+                    'name_admin_bar' => __('Autores', 'text_domain'),
+                    'archives' => __('Arquivo de Autores', 'text_domain'),
+                    'attributes' => __('Item Attributes', 'text_domain'),
+                    'parent_item_colon' => __('Parent Item:', 'text_domain'),
+                    'all_items' => __('Todos os Autores', 'text_domain'),
+                    'add_new_item' => __('Adicionar Novo Autor', 'text_domain'),
+                    'add_new' => __('Adicionar novo autor', 'text_domain'),
+                    'new_item' => __('Novo Autor', 'text_domain'),
+                    'edit_item' => __('Editar Autor', 'text_domain'),
+                    'update_item' => __('Atualizar Autor', 'text_domain'),
+                    'view_item' => __('Ver Autor', 'text_domain'),
+                    'view_items' => __('Ver Autores', 'text_domain'),
+                    'search_items' => __('Pesquisar Autor', 'text_domain'),
+                    'not_found' => __('Não Encontrado', 'text_domain'),
+                    'not_found_in_trash' => __('Nada encontrado na lixeira', 'text_domain'),
+                    'featured_image' => __('Imagem destacada', 'text_domain'),
+                    'set_featured_image' => __('Inserir imagem destacada', 'text_domain'),
+                    'remove_featured_image' => __('Remover imagem destacada', 'text_domain'),
+                    'use_featured_image' => __('Usar como imagem destacada', 'text_domain'),
+                    'insert_into_item' => __('Insert into item', 'text_domain'),
+                    'uploaded_to_this_item' => __('Uploaded to this item', 'text_domain'),
+                    'items_list' => __('Items list', 'text_domain'),
+                    'items_list_navigation' => __('Items list navigation', 'text_domain'),
+                    'filter_items_list' => __('Filter items list', 'text_domain'),
                 ),
                 'description' => 'Post para cadastro de Autores',
                 'supports' => array(
@@ -222,7 +293,7 @@ class Acervo_Emak
                 'public' => true,
                 'menu_icon' => 'dashicons-admin-customizer',
                 'menu_position' => 5,
-                'hierarchical' => true,
+                //'hierarchical' => true,
             )
         );
 
@@ -348,8 +419,8 @@ class Acervo_Emak
             'priority' => 'high',
             'autosave' => 'true',
             'fields' => array(
-            /** @deprecated 0.7 */
-            /*                 // tombo
+                /** @deprecated 0.7 */
+                /*                 // tombo
                 array(
                 'id' => $prefix . 'tombo',
                 'type' => 'text',
@@ -409,8 +480,8 @@ class Acervo_Emak
                 'teeny' => true,
                 ),
                 ),
-			*/
-			
+                 */
+
                 //referencia
                 array(
                     'id' => $prefix . 'referencias',
@@ -422,8 +493,8 @@ class Acervo_Emak
                         'url' => 'URL',
                         'data-de-consulta' => 'Data de consulta',
                     ),
-					'clone' => true,
-					'sort_clone' => true,
+                    'clone' => true,
+                    'sort_clone' => true,
                 ),
 
                 //ligacoes externas
@@ -439,10 +510,10 @@ class Acervo_Emak
                         'titulo' => 'Título',
                         'autor' => 'Autor',
                         'ano' => 'Ano',
-						'url' => 'URL',
+                        'url' => 'URL',
                     ),
-					'clone' => true,
-					'sort_clone' => true,
+                    'clone' => true,
+                    'sort_clone' => true,
                 ),
 
                 //exposições
@@ -460,8 +531,8 @@ class Acervo_Emak
                         'ano' => 'ano',
                         'url' => 'URL',
                     ),
-					'clone' => true,
-					'sort_clone' => true,
+                    'clone' => true,
+                    'sort_clone' => true,
                 ),
             ),
         );
@@ -481,8 +552,8 @@ class Acervo_Emak
             'autosave' => 'true',
             'fields' => array(
 
-            /** @deprecated 0,7 */
-            /*                 //data 1
+                /** @deprecated 0,7 */
+                /*                 //data 1
                 array(
                 'id' => $prefix . 'data-1',
                 'type' => 'text',
@@ -515,7 +586,7 @@ class Acervo_Emak
                 'teeny' => true,
                 ),
                 ),
-        	*/
+                 */
 
                 //referencia
                 array(
@@ -528,8 +599,8 @@ class Acervo_Emak
                         'url' => 'URL',
                         'data-de-consulta' => 'Data de consulta',
                     ),
-					'clone' => true,
-					'sort_clone' => true,
+                    'clone' => true,
+                    'sort_clone' => true,
                 ),
 
                 //ligacoes externas
@@ -547,8 +618,8 @@ class Acervo_Emak
                         'ano' => 'Ano',
                         'url' => 'URL',
                     ),
-					'clone' => true,
-					'sort_clone' => true,
+                    'clone' => true,
+                    'sort_clone' => true,
                 ),
             ),
         );
@@ -556,11 +627,42 @@ class Acervo_Emak
     }
 
     /**
+     * Cria relações
+     *
+     * @since 0.8
+     */
+    public function cria_relacoes()
+    {
+        MB_Relationships_API::register(
+            array(
+                'id' => 'obras_to_autores',
+                'from' => array(
+                    'object_type' => 'post',
+                    'post_type' => 'obras',
+                    'admin_column' => true,
+                    'meta_box' => array(
+                        'title' => 'Autoria da obra',
+                        'context' => 'advanced',
+                    ),
+                ),
+                'to' => array(
+                    'object_type' => 'post',
+                    'post_type' => 'autores',
+                    'meta_box' => array(
+                        'title' => 'Obras na coleção',
+                        'context' => 'advanced',
+                    ),
+                ),
+            )
+        );
+    }
+
+    /**
      * Adiciona relações bidirecionais
      *
      * vincular a autoria da obra com obras do artista
      *
-     * @todo Precisa fazer funcionar ainda
+     * @deprecated 0.8 relações bidirecionais criadas com o MB-relationships
      *
      * @source https://www.advancedcustomfields.com/resources/bidirectional-relationships/
      */
