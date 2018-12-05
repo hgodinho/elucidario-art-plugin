@@ -19,6 +19,7 @@ versão `0.8`
 - labels nos custom-post-types
 - acréscimo do MB-Relationships na função `check_required_plugins`
 - acréscimo da integração com a extensão do Meta-Box (MB-Relationships) para criar relações entre os custom-post-types (obras do autor)
+- /csv e itens
 
 ### Deprecated
 - retirada das metaboxes do acf: referencias, ligacoes externas e exposicoes

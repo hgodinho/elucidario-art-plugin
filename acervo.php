@@ -12,6 +12,13 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
+ * 
+ * @todo jeito de importar dados para wordpress levando em conta o mb-relationships
+ */
+
+
+
+/**
  * Requires
  */
 require_once dirname(__FILE__) . '/lib/class-tgm-plugin-activation.php';
@@ -44,11 +51,11 @@ class Acervo_Emak
     {
 
         /**
-         * @deprecated 0.7
-         * ***
+         *
          * @version 0.8
          * action reativada para versão `0.8` para que seja possível importar
          * o meta-box na ativação do plugin.
+         *
          * */
         add_action('tgmpa_register', array($this, 'check_required_plugins'));
 
@@ -57,11 +64,9 @@ class Acervo_Emak
         add_action('init', 'Acervo_Emak::register_taxonomies');
 
         /**
-         * @deprecated 0.7
-         * ***
          * @version 0.8
          * filtros reativado para versão `0.8` para que seja possível clonar os campos.
-         * não é possível clonar os campos no ACF sem que se tenha a versão premium (25USD)
+         * não é possível clonar os campos no ACF sem que se tenha a versão premium ( 25 USD )
          * */
         add_filter('rwmb_meta_boxes', array($this, 'obra_metabox'));
         add_filter('rwmb_meta_boxes', array($this, 'autor_metabox'));
@@ -82,13 +87,15 @@ class Acervo_Emak
         //add_filter('acf/settings/show_admin', '__return_false');
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
+
+        /** @deprecated 0.8 realações bidirecionais criadas com o MB-Relationships */
         //add_filter('acf/update_value/name=autoria_bidirecional', 'bidirectional_acf_update_value', 10, 3);
     }
 
     /**
      * Verifica plugins requeridos
      *
-     * *obs: função será reativada para versao `0.8`
+     * *obs: função reativada para versao `0.8`
      */
     public function check_required_plugins()
     {
@@ -314,6 +321,23 @@ class Acervo_Emak
                 'labels' => array(
                     'name' => __('Classificação'),
                     'singular_name' => __('Classificação'),
+                    'menu_name' => __('Classificação', 'text_domain'),
+                    'all_items' => __('Todos as classificações', 'text_domain'),
+                    'parent_item' => __('Classificação ascendente', 'text_domain'),
+                    'parent_item_colon' => __('Classificação ascendente:', 'text_domain'),
+                    'new_item_name' => __('Nova Classificação', 'text_domain'),
+                    'add_new_item' => __('Adicione nova Classificação', 'text_domain'),
+                    'edit_item' => __('Editar classificação', 'text_domain'),
+                    'update_item' => __('Atualizar classificação', 'text_domain'),
+                    'view_item' => __('Ver classificação', 'text_domain'),
+                    'separate_items_with_commas' => __('Separe as classificações com vírgulas', 'text_domain'),
+                    'add_or_remove_items' => __('Adicione ou remova classificações', 'text_domain'),
+                    'choose_from_most_used' => __('Escolha das mais usadas', 'text_domain'),
+                    'popular_items' => __('Classificações poupulares', 'text_domain'),
+                    'search_items' => __('Buscar em Classificação', 'text_domain'),
+                    'not_found' => __('Não encontrado', 'text_domain'),
+                    'no_terms' => __('Sem classificação', 'text_domain'),
+                    'items_list' => __('Lista de Classificações', 'text_domain'),
                 ),
                 'public' => true,
                 'hierarchical' => true,
@@ -331,6 +355,23 @@ class Acervo_Emak
                 'labels' => array(
                     'name' => __('Núcleos'),
                     'singular_name' => __('Núcleo'),
+                    'menu_name' => __('Núcleo', 'text_domain'),
+                    'all_items' => __('Todos os núcleos', 'text_domain'),
+                    'parent_item' => __('Núcleo ascendente', 'text_domain'),
+                    'parent_item_colon' => __('Núcleo ascendente:', 'text_domain'),
+                    'new_item_name' => __('Novo Núcleo', 'text_domain'),
+                    'add_new_item' => __('Adicione novo Núcleo', 'text_domain'),
+                    'edit_item' => __('Editar núcleo', 'text_domain'),
+                    'update_item' => __('Atualizar núcleo', 'text_domain'),
+                    'view_item' => __('Ver núcleo', 'text_domain'),
+                    'separate_items_with_commas' => __('Separe os núcleo com vírgulas', 'text_domain'),
+                    'add_or_remove_items' => __('Adicione ou remova núcleos', 'text_domain'),
+                    'choose_from_most_used' => __('Escolha dos mais usadas', 'text_domain'),
+                    'popular_items' => __('Núcleos poupulares', 'text_domain'),
+                    'search_items' => __('Buscar em Núcleos', 'text_domain'),
+                    'not_found' => __('Não encontrado', 'text_domain'),
+                    'no_terms' => __('Sem núcleo', 'text_domain'),
+                    'items_list' => __('Lista de Núcleos', 'text_domain'),
                 ),
                 'public' => true,
                 'hierarchical' => true,
@@ -348,6 +389,23 @@ class Acervo_Emak
                 'labels' => array(
                     'name' => __('Ambientes'),
                     'singular_name' => __('Ambiente'),
+                    'menu_name' => __('Ambientes', 'text_domain'),
+                    'all_items' => __('Todos os ambientes', 'text_domain'),
+                    'parent_item' => __('Ambiente ascendente', 'text_domain'),
+                    'parent_item_colon' => __('Ambientes ascendente:', 'text_domain'),
+                    'new_item_name' => __('Novo Ambiente', 'text_domain'),
+                    'add_new_item' => __('Adicione novo Ambiente', 'text_domain'),
+                    'edit_item' => __('Editar ambiente', 'text_domain'),
+                    'update_item' => __('Atualizar ambiente', 'text_domain'),
+                    'view_item' => __('Ver ambiente', 'text_domain'),
+                    'separate_items_with_commas' => __('Separe os ambientes com vírgulas', 'text_domain'),
+                    'add_or_remove_items' => __('Adicione ou remova ambientes', 'text_domain'),
+                    'choose_from_most_used' => __('Escolha dos mais usadas', 'text_domain'),
+                    'popular_items' => __('Ambientes poupulares', 'text_domain'),
+                    'search_items' => __('Buscar em Ambientes', 'text_domain'),
+                    'not_found' => __('Não encontrado', 'text_domain'),
+                    'no_terms' => __('Sem ambiente', 'text_domain'),
+                    'items_list' => __('Lista de Ambientes', 'text_domain'),
                 ),
                 'public' => true,
                 'hierarchical' => true,
