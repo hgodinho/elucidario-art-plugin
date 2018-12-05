@@ -5,8 +5,14 @@ versão `0.8`
 # Changelog
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+## `0.9`
+### Added 
+- templates
+
+
+***
 ## `0.8`
-## Changed
+### Changed
 - mudança no custom-post-type autor. de página para post         
 > @source https://woorkup.com/beware-the-100-page-wordpress-limitation/ 
 > O wordpress tem um limite de 100 páginas e 

@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.8
+Version:      0.9
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -22,7 +22,7 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  * Requires
  */
 require_once dirname(__FILE__) . '/lib/class-tgm-plugin-activation.php';
-require_once plugin_dir_path(__FILE__) . 'acf/acf.php';
+require_once dirname(__FILE__) . '/acf/acf.php';
 
 const PLUGIN_NAME = "Wiki-Ema";
 const TEXT_DOMAIN = "acervo-emak";
@@ -90,6 +90,13 @@ class Acervo_Emak
 
         /** @deprecated 0.8 realações bidirecionais criadas com o MB-Relationships */
         //add_filter('acf/update_value/name=autoria_bidirecional', 'bidirectional_acf_update_value', 10, 3);
+
+        /** 
+         * Adiciona template
+         * @since 0.9
+         */
+        add_action('template_include', array($this,'add_template'));
+        add_action('wp_enqueue_scripts', array($this, 'add_css'));
     }
 
     /**
@@ -803,6 +810,29 @@ class Acervo_Emak
         // return
         return $value;
     }
+
+    /**
+     * Adiciona template em bootstrap
+     * 
+     * @todo adicionar mais detalhes ao docblock
+     * @todo ver possibilidade de usar uma classe específica @source https://github.com/codelight-eu/wp-page-templates
+     * 
+     * @since 0.9
+     * 
+     */
+    function add_template($template){
+        if(is_singular('obra')){
+            if(file_exists(get_stylesheet_directory().'template/single-obra.php')){
+                return get_stylesheet_directory().'template/single-obra.php';
+            }
+            return plugin_dir_path(__FILE__).'/template/single-obra.php';
+        }
+        return $template;
+    }
+    function add_css(){
+        wp_enqueue_style('.css', plugin_dir_url(__FILE__).'template/css/.css');
+    }
+
 
     /**
      * Ativador
