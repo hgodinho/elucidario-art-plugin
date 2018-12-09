@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.9
+Version:      0.10
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -12,11 +12,9 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
- * 
+ *
  * @todo jeito de importar dados para wordpress levando em conta o mb-relationships
  */
-
-
 
 /**
  * Requires
@@ -25,6 +23,7 @@ require_once dirname(__FILE__) . '/lib/class-tgm-plugin-activation.php';
 require_once dirname(__FILE__) . '/acf/acf.php';
 
 const PLUGIN_NAME = "Wiki-Ema";
+const PLUGIN_SLUG = "wiki-ema";
 const TEXT_DOMAIN = "acervo-emak";
 
 /**
@@ -88,15 +87,26 @@ class Acervo_Emak
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
+        /**
+         * Adiciona taxonomias no submenu Wiki-Ema
+         * @since 0.10
+         */
+        add_action('admin_menu', array($this, 'add_tax_menus'));
+
         /** @deprecated 0.8 realações bidirecionais criadas com o MB-Relationships */
         //add_filter('acf/update_value/name=autoria_bidirecional', 'bidirectional_acf_update_value', 10, 3);
 
-        /** 
+        /**
          * Adiciona template
          * @since 0.9
+         * 
+         * Template será usado um tema específico, adaptado do wp-bootstrap-starter
+         * @source https://br.wordpress.org/themes/wp-bootstrap-starter/
+         * 
+         * Para fazer a integração será usado o plugin multiple-themes
+         * @source https://br.wordpress.org/plugins/jonradio-multiple-themes/
          */
-        add_action('template_include', array($this,'add_template'));
-        add_action('wp_enqueue_scripts', array($this, 'add_css'));
+
     }
 
     /**
@@ -106,7 +116,7 @@ class Acervo_Emak
      */
     public function check_required_plugins()
     {
-        /*Plugin*/
+        /** Plugins */
         $plugins = array(
             /* Meta-Box */
             array(
@@ -124,15 +134,6 @@ class Acervo_Emak
                 'force_activation' => true,
                 'dismissable' => false,
             ),
-            /** @deprecated 0.7
-             * array(
-             * 'name'                => 'Advanced Custom Fields',
-             * 'slug'                => 'advanced-custom-fields',
-             * 'required'            => true,
-             * 'force_activation'    => true,
-             * 'dismissable'         => false,
-             * ),
-             */
         );
 
         /** Config */
@@ -186,13 +187,13 @@ class Acervo_Emak
     }
     public function my_acf_json_save_point($path)
     {
-        $path = plugin_dir_path(__FILE__) . 'acf-json';
+        $path = plugin_dir_path(__FILE__) . 'acf/acf-json';
         return $path;
     }
     public function my_acf_json_load_point($paths)
     {
         unset($paths[0]);
-        $paths[] = plugin_dir_path(__FILE__) . 'acf-json';
+        $paths[] = plugin_dir_path(__FILE__) . 'acf/acf-json';
         return $paths;
     }
 
@@ -203,6 +204,34 @@ class Acervo_Emak
      */
     public static function register_post_type()
     {
+        /** registra wiki-ema */
+        register_post_type(
+            'wikiema',
+            array(
+                'labels' => array(
+                    'name' => __('Wiki-Ema'),
+                    'singular_name' => __('Wiki-Ema'),
+                    'menu_name' => __('Wiki-Ema', 'text_domain'),
+                    'name_admin_bar' => __('Wiki-Ema', 'text_domain'),
+                ),
+                'description' => 'Páginas principais da Wiki-Ema',
+                'supports' => array(
+                    'title',
+                    //'editor',
+                    //'excerpt',
+                    'author',
+                    'revisions',
+                    'thumbnail',
+                    //'custom-fields',
+                    'comments',
+                ),
+                'public' => true,
+                //'hierarchical' => true,
+                'menu_icon' => 'dashicons-admin-customizer',
+                'menu_position' => 5,
+            )
+        );
+
         /** registra obras */
         register_post_type(
             'obras',
@@ -249,8 +278,12 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'menu_icon' => 'dashicons-admin-customizer',
-                'menu_position' => 5,
+                'show_in_menu' => 'edit.php?post_type=wikiema',
+                'has_archive' => true,
+                'rewrite' => array(
+                    'slug' => PLUGIN_SLUG . '/obra',
+                    'with_front' => false,
+                ),
             )
         );
         /** registra autores */
@@ -305,9 +338,12 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'menu_icon' => 'dashicons-admin-customizer',
-                'menu_position' => 5,
-                //'hierarchical' => true,
+                'show_in_menu' => 'edit.php?post_type=wikiema',
+                'has_archive' => true,
+                'rewrite' => array(
+                    'slug' => PLUGIN_SLUG . '/autor',
+                    'with_front' => false,
+                ),
             )
         );
 
@@ -349,6 +385,8 @@ class Acervo_Emak
                 'public' => true,
                 'hierarchical' => true,
                 'rewrite' => array('slug' => 'classificacao'),
+                //'show_in_menu' => 'edit-tags.php?taxonomy=classificacao&post_type=wiki-ema',
+
             )
 
         );
@@ -460,6 +498,21 @@ class Acervo_Emak
 
         );
         register_taxonomy_for_object_type('tipo_autor', 'autores');
+    }
+
+    /**
+     * Registra submenus para taxonomias na Wiki-ema
+     *
+     * @since 0.10
+     */
+    public static function add_tax_menus()
+    {
+        $key = 'edit.php?post_type=wikiema';
+        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wikiema');
+        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wikiema');
+        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wikiema');
+        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=wikiema');
+
     }
 
     /**
@@ -813,26 +866,27 @@ class Acervo_Emak
 
     /**
      * Adiciona template em bootstrap
-     * 
+     *
      * @todo adicionar mais detalhes ao docblock
      * @todo ver possibilidade de usar uma classe específica @source https://github.com/codelight-eu/wp-page-templates
-     * 
+     *
      * @since 0.9
-     * 
+     *
      */
-    function add_template($template){
-        if(is_singular('obra')){
-            if(file_exists(get_stylesheet_directory().'template/single-obra.php')){
-                return get_stylesheet_directory().'template/single-obra.php';
+    public function add_template($template)
+    {
+        if (is_singular('obras')) {
+            if (file_exists(get_stylesheet_directory($this) . 'template/single-obra.php')) {
+                return get_stylesheet_directory($this) . 'template/single-obra.php';
             }
-            return plugin_dir_path(__FILE__).'/template/single-obra.php';
+            return plugin_dir_path(__FILE__) . '/template/single-obra.php';
         }
         return $template;
     }
-    function add_css(){
-        wp_enqueue_style('.css', plugin_dir_url(__FILE__).'template/css/.css');
+    public function add_css()
+    {
+        wp_enqueue_style('.css', plugin_dir_url(__FILE__) . 'template/css/.css');
     }
-
 
     /**
      * Ativador
