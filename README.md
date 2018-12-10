@@ -21,11 +21,12 @@ versão `0.8`
         'with_front' => false,
     ),
     ```
+- campo fotógrafo no acf_fields obras
 
 ### Changed
 
 - paramos de usar o tema-child, iria dificultar a integração dos dois temas. com isso passamos a usar o plugin multiple-themes assim conseguimos adaptar o tema wp-bootstrap-starter
-  
+
 
 
 ***

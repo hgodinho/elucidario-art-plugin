@@ -286,6 +286,7 @@ class Acervo_Emak
                 ),
             )
         );
+        
         /** registra autores */
         /**
          * @since 0.8
@@ -385,10 +386,7 @@ class Acervo_Emak
                 'public' => true,
                 'hierarchical' => true,
                 'rewrite' => array('slug' => 'classificacao'),
-                //'show_in_menu' => 'edit-tags.php?taxonomy=classificacao&post_type=wiki-ema',
-
             )
-
         );
         register_taxonomy_for_object_type('classificacao', 'obras');
 
@@ -422,7 +420,6 @@ class Acervo_Emak
                 'hierarchical' => true,
                 'rewrite' => array('slug' => 'nucleo'),
             )
-
         );
         register_taxonomy_for_object_type('nucleo', 'obras');
 
@@ -454,9 +451,8 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => 'nucleo'),
+                'rewrite' => array('slug' => 'ambiente'),
             )
-
         );
         register_taxonomy_for_object_type('ambiente', 'obras');
 
@@ -495,7 +491,6 @@ class Acervo_Emak
                 'show_tagcloud' => true,
                 'rewrite' => array('slug' => 'tipo-autor'),
             )
-
         );
         register_taxonomy_for_object_type('tipo_autor', 'autores');
     }
