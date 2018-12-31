@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.10
+Version:      0.11
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -206,7 +206,7 @@ class Acervo_Emak
     {
         /** registra wiki-ema */
         register_post_type(
-            'wikiema',
+            'wiki-ema',
             array(
                 'labels' => array(
                     'name' => __('Wiki-Ema'),
@@ -217,18 +217,20 @@ class Acervo_Emak
                 'description' => 'Páginas principais da Wiki-Ema',
                 'supports' => array(
                     'title',
-                    //'editor',
+                    'editor',
                     //'excerpt',
                     'author',
                     'revisions',
                     'thumbnail',
                     //'custom-fields',
                     'comments',
+                    'page-attributes',
                 ),
                 'public' => true,
-                //'hierarchical' => true,
+                'hierarchical' => true,
                 'menu_icon' => 'dashicons-admin-customizer',
                 'menu_position' => 5,
+                'has_archive' => true,
             )
         );
 
@@ -278,7 +280,7 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'show_in_menu' => 'edit.php?post_type=wikiema',
+                'show_in_menu' => 'edit.php?post_type=wiki-ema',
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/obra',
@@ -339,7 +341,7 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'show_in_menu' => 'edit.php?post_type=wikiema',
+                'show_in_menu' => 'edit.php?post_type=wiki-ema',
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/autor',
@@ -385,7 +387,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => 'classificacao'),
+                'rewrite' => array('slug' =>  PLUGIN_SLUG . '/classificacao'),
             )
         );
         register_taxonomy_for_object_type('classificacao', 'obras');
@@ -418,7 +420,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => 'nucleo'),
+                'rewrite' => array('slug' => PLUGIN_SLUG . '/nucleo'),
             )
         );
         register_taxonomy_for_object_type('nucleo', 'obras');
@@ -451,7 +453,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => 'ambiente'),
+                'rewrite' => array('slug' => PLUGIN_SLUG . '/ambiente'),
             )
         );
         register_taxonomy_for_object_type('ambiente', 'obras');
@@ -489,7 +491,7 @@ class Acervo_Emak
                 'show_admin_column' => true,
                 'show_in_nav_menus' => true,
                 'show_tagcloud' => true,
-                'rewrite' => array('slug' => 'tipo-autor'),
+                'rewrite' => array('slug' => PLUGIN_SLUG . '/tipo-autor'),
             )
         );
         register_taxonomy_for_object_type('tipo_autor', 'autores');
@@ -502,7 +504,7 @@ class Acervo_Emak
      */
     public static function add_tax_menus()
     {
-        $key = 'edit.php?post_type=wikiema';
+        $key = 'edit.php?post_type=wiki-ema';
         add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wikiema');
         add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wikiema');
         add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wikiema');

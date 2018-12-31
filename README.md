@@ -7,6 +7,13 @@ versão `0.8`
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+## `0.11` [2018-12-31]
+
+### Changed
+- `rewrite` nas taxonomias
+- `rewrite -> slug` nos custom post type
+
+***
 ## `0.10` [2018-12-09]
 
 ### Added
