@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.11
+Version:      0.12
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -43,6 +43,7 @@ class Acervo_Emak
         return self::$instance;
     }
 
+    
     /**
      * Construtor do Wordpress
      */
@@ -93,8 +94,6 @@ class Acervo_Emak
          */
         add_action('admin_menu', array($this, 'add_tax_menus'));
 
-        /** @deprecated 0.8 realações bidirecionais criadas com o MB-Relationships */
-        //add_filter('acf/update_value/name=autoria_bidirecional', 'bidirectional_acf_update_value', 10, 3);
 
         /**
          * Adiciona template
@@ -108,6 +107,7 @@ class Acervo_Emak
          */
 
     }
+
 
     /**
      * Verifica plugins requeridos
@@ -168,6 +168,7 @@ class Acervo_Emak
         tgmpa($plugins, $config);
     }
 
+
     /**
      * Funções de configurações do ACF
      *
@@ -197,6 +198,7 @@ class Acervo_Emak
         return $paths;
     }
 
+
     /**
      * Registra custom-post types
      *
@@ -206,7 +208,7 @@ class Acervo_Emak
     {
         /** registra wiki-ema */
         register_post_type(
-            'wiki-ema',
+            'wiki_ema',
             array(
                 'labels' => array(
                     'name' => __('Wiki-Ema'),
@@ -280,11 +282,12 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'show_in_menu' => 'edit.php?post_type=wiki-ema',
+                'publicly_queryable' => true,
+                'show_in_menu' => 'edit.php?post_type=wiki_ema',
                 'has_archive' => true,
                 'rewrite' => array(
-                    'slug' => PLUGIN_SLUG . '/obra',
-                    'with_front' => false,
+                    'slug' => PLUGIN_SLUG . '/obras',
+                    'with_front' => true,
                 ),
             )
         );
@@ -341,7 +344,8 @@ class Acervo_Emak
                     'comments',
                 ),
                 'public' => true,
-                'show_in_menu' => 'edit.php?post_type=wiki-ema',
+                'publicly_queryable' => true,
+                'show_in_menu' => 'edit.php?post_type=wiki_ema',
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/autor',
@@ -351,6 +355,7 @@ class Acervo_Emak
         );
 
     }
+
 
     /**
      * Registra custom taxonomy
@@ -497,6 +502,7 @@ class Acervo_Emak
         register_taxonomy_for_object_type('tipo_autor', 'autores');
     }
 
+
     /**
      * Registra submenus para taxonomias na Wiki-ema
      *
@@ -505,12 +511,12 @@ class Acervo_Emak
     public static function add_tax_menus()
     {
         $key = 'edit.php?post_type=wiki-ema';
-        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wikiema');
-        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wikiema');
-        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wikiema');
-        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=wikiema');
-
+        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wiki_ema');
+        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wiki_ema');
+        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wiki_ema');
+        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=wiki_ema');
     }
+
 
     /**
      * Cria metaboxes com Meta-box plugin
@@ -534,68 +540,6 @@ class Acervo_Emak
             'priority' => 'high',
             'autosave' => 'true',
             'fields' => array(
-                /** @deprecated 0.7 */
-                /*                 // tombo
-                array(
-                'id' => $prefix . 'tombo',
-                'type' => 'text',
-                'name' => esc_html__('Tombo', 'metabox-emak'),
-                'desc' => esc_html__('número de tombo da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('M-0000', 'metabox-emak'),
-                ),
-
-                //origem
-                array(
-                'id' => $prefix . 'origem',
-                'type' => 'text',
-                'name' => esc_html__('Origem', 'metabox-emak'),
-                'desc' => esc_html__('origem da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('Brasil', 'metabox-emak'),
-                ),
-
-                //data
-                array(
-                'id' => $prefix . 'data',
-                'type' => 'text',
-                'name' => esc_html__('Data/Período', 'metabox-emak'),
-                'desc' => esc_html__('data ou período da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('Séc XX', 'metabox-emak'),
-                ),
-
-                //material
-                array(
-                'id' => $prefix . 'material',
-                'type' => 'text',
-                'name' => esc_html__('Material', 'metabox-emak'),
-                'desc' => esc_html__('material da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('óleo sobre madeira', 'metabox-emak'),
-                ),
-
-                //dimensoes
-                array(
-                'id' => $prefix . 'dimensoes',
-                'type' => 'text',
-                'name' => esc_html__('Dimensões', 'metabox-emak'),
-                'desc' => esc_html__('dimensões da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('25cm X 25cm', 'metabox-emak'),
-                ),
-
-                //descricao
-                //divider
-                array(
-                'type' => 'divider',
-                ),
-                array(
-                'name' => esc_html__('Descrição', 'metabox-emak'),
-                'id' => $prefix . 'descricao',
-                'type' => 'wysiwyg',
-                'raw' => false,
-                'options' => array(
-                'textarea_rows' => 6,
-                'teeny' => true,
-                ),
-                ),
-                 */
 
                 //referencia
                 array(
@@ -666,43 +610,6 @@ class Acervo_Emak
             'priority' => 'high',
             'autosave' => 'true',
             'fields' => array(
-
-                /** @deprecated 0,7 */
-                /*                 //data 1
-                array(
-                'id' => $prefix . 'data-1',
-                'type' => 'text',
-                'name' => esc_html__('Data/Período inicial', 'metabox-emak'),
-                'desc' => esc_html__('data ou período inicial da obra', 'metabox-emak'),
-                'placeholder' => esc_html__('Séc XX', 'metabox-emak'),
-                ),
-
-                //data 2
-                array(
-                'id' => $prefix . 'data-2',
-                'type' => 'text',
-                'name' => esc_html__('Data/Período final', 'metabox-emak'),
-                'desc' => esc_html__('data ou período da final obra', 'metabox-emak'),
-                'placeholder' => esc_html__('Séc XX', 'metabox-emak'),
-                ),
-
-                //descricao
-                //divider
-                array(
-                'type' => 'divider',
-                ),
-                array(
-                'name' => esc_html__('Descrição', 'metabox-emak'),
-                'id' => $prefix . 'descricao',
-                'type' => 'wysiwyg',
-                'raw' => false,
-                'options' => array(
-                'textarea_rows' => 6,
-                'teeny' => true,
-                ),
-                ),
-                 */
-
                 //referencia
                 array(
                     'id' => $prefix . 'referencias',
@@ -741,6 +648,7 @@ class Acervo_Emak
         return $meta_boxes;
     }
 
+
     /**
      * Cria relações
      *
@@ -771,6 +679,8 @@ class Acervo_Emak
             )
         );
     }
+
+
 
     /**
      * Adiciona relações bidirecionais
@@ -861,29 +771,6 @@ class Acervo_Emak
         return $value;
     }
 
-    /**
-     * Adiciona template em bootstrap
-     *
-     * @todo adicionar mais detalhes ao docblock
-     * @todo ver possibilidade de usar uma classe específica @source https://github.com/codelight-eu/wp-page-templates
-     *
-     * @since 0.9
-     *
-     */
-    public function add_template($template)
-    {
-        if (is_singular('obras')) {
-            if (file_exists(get_stylesheet_directory($this) . 'template/single-obra.php')) {
-                return get_stylesheet_directory($this) . 'template/single-obra.php';
-            }
-            return plugin_dir_path(__FILE__) . '/template/single-obra.php';
-        }
-        return $template;
-    }
-    public function add_css()
-    {
-        wp_enqueue_style('.css', plugin_dir_url(__FILE__) . 'template/css/.css');
-    }
 
     /**
      * Ativador
@@ -896,6 +783,7 @@ class Acervo_Emak
         flush_rewrite_rules();
     }
 }
+
 
 /**
  * instancias

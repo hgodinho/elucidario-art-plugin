@@ -7,6 +7,17 @@ versão `0.8`
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+## `0.12 [2019-01-03]
+### Changed
+- modificações no custom post-type wiki-ema para wiki_ema, dando erro 404 nos singles.
+
+### removed
+- depreciados
+
+### added
+- deprecated.php
+
+***
 ## `0.11` [2018-12-31]
 
 ### Changed
