@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.12
+Version:      0.13
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -43,7 +43,6 @@ class Acervo_Emak
         return self::$instance;
     }
 
-
     /**
      * Construtor do Wordpress
      */
@@ -58,6 +57,11 @@ class Acervo_Emak
          *
          * */
         add_action('tgmpa_register', array($this, 'check_required_plugins'));
+
+        /**
+         * adiciona menu item para organização no admin
+         */
+        add_action('admin_menu', array($this,'custom_menu_admin_page'));
 
         /** adiciona as actions ds post-types e das taxonomies */
         add_action('init', 'Acervo_Emak::register_post_type');
@@ -88,26 +92,19 @@ class Acervo_Emak
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
-        /**
-         * Adiciona taxonomias no submenu Wiki-Ema
-         * @since 0.10
-         */
-        add_action('admin_menu', array($this, 'add_tax_menus'));
-
 
         /**
          * Adiciona template
          * @since 0.9
-         * 
+         *
          * Template será usado um tema específico, adaptado do wp-bootstrap-starter
          * @source https://br.wordpress.org/themes/wp-bootstrap-starter/
-         * 
+         *
          * Para fazer a integração será usado o plugin multiple-themes
          * @source https://br.wordpress.org/plugins/jonradio-multiple-themes/
          */
 
     }
-
 
     /**
      * Verifica plugins requeridos
@@ -168,7 +165,6 @@ class Acervo_Emak
         tgmpa($plugins, $config);
     }
 
-
     /**
      * Funções de configurações do ACF
      *
@@ -198,7 +194,6 @@ class Acervo_Emak
         return $paths;
     }
 
-
     /**
      * Registra custom-post types
      *
@@ -206,36 +201,6 @@ class Acervo_Emak
      */
     public static function register_post_type()
     {
-        /** registra wiki-ema */
-        register_post_type(
-            'wiki_ema',
-            array(
-                'labels' => array(
-                    'name' => __('Wiki-Ema'),
-                    'singular_name' => __('Wiki-Ema'),
-                    'menu_name' => __('Wiki-Ema', 'text_domain'),
-                    'name_admin_bar' => __('Wiki-Ema', 'text_domain'),
-                ),
-                'description' => 'Páginas principais da Wiki-Ema',
-                'supports' => array(
-                    'title',
-                    'editor',
-                    //'excerpt',
-                    'author',
-                    'revisions',
-                    'thumbnail',
-                    //'custom-fields',
-                    'comments',
-                    'page-attributes',
-                ),
-                'public' => true,
-                'hierarchical' => true,
-                'menu_icon' => 'dashicons-admin-customizer',
-                'menu_position' => 5,
-                'has_archive' => true,
-            )
-        );
-
         /** registra obras */
         register_post_type(
             'obras',
@@ -248,7 +213,7 @@ class Acervo_Emak
                     'archives' => __('Arquivo de Obras', 'text_domain'),
                     'attributes' => __('Item Attributes', 'text_domain'),
                     'parent_item_colon' => __('Parent Item:', 'text_domain'),
-                    'all_items' => __('Todas as obras', 'text_domain'),
+                    'all_items' => __('Todas as Obras', 'text_domain'),
                     'add_new_item' => __('Adicionar Nova Obra', 'text_domain'),
                     'add_new' => __('Adicionar nova obra', 'text_domain'),
                     'new_item' => __('Nova Obra', 'text_domain'),
@@ -283,7 +248,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'publicly_queryable' => true,
-                'show_in_menu' => 'edit.php?post_type=wiki_ema',
+                'show_in_menu' => false,
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/obras',
@@ -291,7 +256,7 @@ class Acervo_Emak
                 ),
             )
         );
-        
+
         /** registra autores */
         /**
          * @since 0.8
@@ -345,7 +310,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'publicly_queryable' => true,
-                'show_in_menu' => 'edit.php?post_type=wiki_ema',
+                'show_in_menu' => false,
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/autor',
@@ -355,7 +320,6 @@ class Acervo_Emak
         );
 
     }
-
 
     /**
      * Registra custom taxonomy
@@ -392,7 +356,7 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' =>  PLUGIN_SLUG . '/classificacao'),
+                'rewrite' => array('slug' => PLUGIN_SLUG . '/classificacao'),
             )
         );
         register_taxonomy_for_object_type('classificacao', 'obras');
@@ -502,19 +466,35 @@ class Acervo_Emak
         register_taxonomy_for_object_type('tipo_autor', 'autores');
     }
 
-
     /**
-     * Registra submenus para taxonomias na Wiki-ema
-     *
-     * @since 0.10
+     * Registra um custom menu no admin.
+     * 
+     * @since 0.13
      */
-    public static function add_tax_menus()
+    public static function custom_menu_admin_page()
     {
-        $key = 'edit.php?post_type=wiki_ema';
-        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wiki_ema');
-        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wiki_ema');
-        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wiki_ema');
-        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=wiki_ema');
+        $key = 'wiki-ema' . '/wiki-ema-admin';
+
+        add_menu_page(
+            __('Wiki-Ema', 'textdomain'),
+            'Wiki-Ema',
+            'manage_options',
+            $key,
+            array($this, 'template_plugin_admin'),
+            'dashicons-admin-customizer',
+            3
+        );
+
+        add_submenu_page($key, 'Obras', 'Obras', 'edit_posts','edit.php?post_type=obras');
+        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts','edit.php?post_type=autores');
+        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
+        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
+        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
+        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
+    }
+
+    public static function template_plugin_admin(){
+        include('wiki-ema-admin.php');
     }
 
 
@@ -648,7 +628,6 @@ class Acervo_Emak
         return $meta_boxes;
     }
 
-
     /**
      * Cria relações
      *
@@ -679,8 +658,6 @@ class Acervo_Emak
             )
         );
     }
-
-
 
     /**
      * Adiciona relações bidirecionais
@@ -771,7 +748,6 @@ class Acervo_Emak
         return $value;
     }
 
-
     /**
      * Ativador
      */
@@ -783,7 +759,6 @@ class Acervo_Emak
         flush_rewrite_rules();
     }
 }
-
 
 /**
  * instancias

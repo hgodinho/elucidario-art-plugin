@@ -7,6 +7,15 @@ versão `0.8`
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+## `0.13` [2019-01-03]
+### removed
+- cpt wiki-ema
+
+### added
+- add_menu_page e add_submenu_page
+
+
+***
 ## `0.12 [2019-01-03]
 ### Changed
 - modificações no custom post-type wiki-ema para wiki_ema, dando erro 404 nos singles.
