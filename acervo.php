@@ -43,7 +43,7 @@ class Acervo_Emak
         return self::$instance;
     }
 
-    
+
     /**
      * Construtor do Wordpress
      */
@@ -510,7 +510,7 @@ class Acervo_Emak
      */
     public static function add_tax_menus()
     {
-        $key = 'edit.php?post_type=wiki-ema';
+        $key = 'edit.php?post_type=wiki_ema';
         add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=wiki_ema');
         add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=wiki_ema');
         add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=wiki_ema');
