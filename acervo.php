@@ -61,7 +61,7 @@ class Acervo_Emak
         /**
          * adiciona menu item para organização no admin
          */
-        add_action('admin_menu', array($this,'custom_menu_admin_page'));
+        add_action('admin_menu', array($this, 'custom_menu_admin_page'));
 
         /** adiciona as actions ds post-types e das taxonomies */
         add_action('init', 'Acervo_Emak::register_post_type');
@@ -91,7 +91,6 @@ class Acervo_Emak
         //add_filter('acf/settings/show_admin', '__return_false');
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
-
 
         /**
          * Adiciona template
@@ -468,7 +467,7 @@ class Acervo_Emak
 
     /**
      * Registra um custom menu no admin.
-     * 
+     *
      * @since 0.13
      */
     public static function custom_menu_admin_page()
@@ -485,18 +484,18 @@ class Acervo_Emak
             3
         );
 
-        add_submenu_page($key, 'Obras', 'Obras', 'edit_posts','edit.php?post_type=obras');
-        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts','edit.php?post_type=autores');
+        add_submenu_page($key, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
+        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
         add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
         add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
         add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
         add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
     }
 
-    public static function template_plugin_admin(){
-        include('wiki-ema-admin.php');
+    public static function template_plugin_admin()
+    {
+        include 'wiki-ema-admin.php';
     }
-
 
     /**
      * Cria metaboxes com Meta-box plugin
@@ -652,6 +651,28 @@ class Acervo_Emak
                     'post_type' => 'autores',
                     'meta_box' => array(
                         'title' => 'Obras na coleção',
+                        'context' => 'advanced',
+                    ),
+                ),
+            )
+        );
+
+        MB_Relationships_API::register(
+            array(
+                'id' => 'obra_em_destaque',
+                'from' => array(
+                    'object_type' => 'post',
+                    'post_type' => 'autores',
+                    'meta_box' => array(
+                        'title' => 'Obra em Destaque',
+                        'context' => 'advanced',
+                    ),
+                ),
+                'to' => array(
+                    'object_type' => 'post',
+                    'post_type' => 'obras',
+                    'meta_box' => array(
+                        'title' => 'Obra em destaque de',
                         'context' => 'advanced',
                     ),
                 ),

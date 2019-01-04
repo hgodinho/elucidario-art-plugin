@@ -7,6 +7,12 @@ versão `0.8`
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+## `0.14` [2019-01-04]
+### added:
+- mb-relationships de obra-em-destaque
+
+
+***
 ## `0.13` [2019-01-03]
 ### removed
 - cpt wiki-ema
