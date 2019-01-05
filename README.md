@@ -11,6 +11,8 @@ versão `0.8`
 ### added:
 - mb-relationships de obra-em-destaque
 
+### removed:
+- depreciados
 
 ***
 ## `0.13` [2019-01-03]
