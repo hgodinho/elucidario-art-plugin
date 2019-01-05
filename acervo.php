@@ -92,8 +92,7 @@ class Acervo_Emak
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
-
-        add_action( 'wp_before_admin_bar_render', array($this, 'my_admin_bar_link' ));
+        add_action('wp_before_admin_bar_render', array($this, 'my_admin_bar_link'));
         /**
          * Adiciona template
          * @since 0.9
@@ -202,6 +201,36 @@ class Acervo_Emak
      */
     public static function register_post_type()
     {
+        /** registra wiki-ema */
+        register_post_type(
+            'wiki_ema',
+            array(
+                'labels' => array(
+                    'name' => __('Wiki-Ema'),
+                    'singular_name' => __('Wiki-Ema'),
+                    'attributes' => __('Item Attributes', 'text_domain'),
+                ),
+                'description' => 'Páginas especiais Wiki-Ema',
+                'supports' => array(
+                    'title',
+                    'editor',
+                    'excerpt',
+                    'author',
+                    'revisions',
+                    'thumbnail',
+                ),
+                'public' => true,
+                'publicly_queryable' => true,
+                'show_in_menu' => false,
+                'has_archive' => true,
+                'hierachical' => true,
+                'rewrite' => array(
+                    'slug' => PLUGIN_SLUG . '/pag',
+                    'with_front' => true,
+                ),
+            )
+        );
+
         /** registra obras */
         register_post_type(
             'obras',
@@ -486,11 +515,12 @@ class Acervo_Emak
             3
         );
 
+        add_submenu_page($key, 'Páginas Especiais', 'Página especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
         add_submenu_page($key, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
-        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
         add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
         add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
         add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
+        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
         add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
     }
 
@@ -688,18 +718,23 @@ class Acervo_Emak
      * @since 0.14
      * @return void
      */
-    public function my_admin_bar_link() {
+    public function my_admin_bar_link()
+    {
         global $wp_admin_bar;
         global $post;
-        if ( !is_super_admin() || !is_admin_bar_showing() )
+        if (!is_super_admin() || !is_admin_bar_showing()) {
             return;
-        if ( is_single() )
-        $wp_admin_bar->add_menu( array(
-            'id' => 'edit_fixed',
-            'parent' => false,
-            'title' => __( 'Edit'),
-            'href' => get_edit_post_link($post->id)
-        ) );
+        }
+
+        if (is_single()) {
+            $wp_admin_bar->add_menu(array(
+                'id' => 'edit_fixed',
+                'parent' => false,
+                'title' => __('Edit'),
+                'href' => get_edit_post_link($post->id),
+            ));
+        }
+
     }
 
     /**

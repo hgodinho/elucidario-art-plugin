@@ -10,6 +10,7 @@ versão `0.8`
 ## `0.14` [2019-01-04]
 ### added:
 - mb-relationships de obra-em-destaque
+- cpt wiki_ema que foi removido na 0.13. volta para criar páginas especiais como ambientes, núcleos e classificação. assim gero o template dessas páginas fazendo o query pelas custom taxonomies
 
 ### removed:
 - depreciados
