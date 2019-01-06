@@ -1,0 +1,13 @@
+{
+	"name": "Wiki-Ema",
+	"description": "Plugin Wiki-Ema",
+	"authors":[
+		{
+			"name": "hgodinho"
+		}
+	],
+	"require":{
+		"apigen/apigen": "dev-master",
+        "roave/better-reflection": "dev-master#c87d856"
+	}
+}
