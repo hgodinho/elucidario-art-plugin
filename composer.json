@@ -1,13 +1,12 @@
 {
-	"name": "Wiki-Ema",
-	"description": "Plugin Wiki-Ema",
-	"authors":[
-		{
-			"name": "hgodinho"
-		}
-	],
-	"require":{
-		"apigen/apigen": "dev-master",
-        "roave/better-reflection": "dev-master#c87d856"
-	}
+    "name": "henriquegodinho/wiki-ema",
+    "authors": [
+        {
+            "name": "hgodinho",
+            "email": "hnrq.godinho@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "apigen/apigen": "^4.1"
+    }
 }
