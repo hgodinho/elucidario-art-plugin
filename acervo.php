@@ -214,7 +214,7 @@ class Acervo_Emak
                     'attributes' => __('Item Attributes', 'text_domain'),
                     'parent_item_colon' => __('Parent Item:', 'text_domain'),
                     'all_items' => __('Todas as Páginas Especiais', 'text_domain'),
-                    'add_new_item' => __('Adicionar Nova Obra', 'text_domain'),
+                    'add_new_item' => __('Adicionar Nova Página especial', 'text_domain'),
                     'add_new' => __('Adicionar nova página especial', 'text_domain'),
                     'new_item' => __('Nova Página Especial', 'text_domain'),
                     'edit_item' => __('Editar Página Especial', 'text_domain'),
