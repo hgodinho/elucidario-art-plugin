@@ -1,12 +1,18 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.8`
+versão `0.15`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
+
+## `0.15` [2019-01-23]
+### added:
+- Função que sincroniza as obras com os autores no wiki-ema-admin.php
+
+***
 ## `0.14` [2019-01-04]
 ### added:
 - mb-relationships de obra-em-destaque
