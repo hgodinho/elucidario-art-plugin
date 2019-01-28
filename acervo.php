@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.14
+Version:      0.15
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -131,6 +131,54 @@ class Acervo_Emak
                 'force_activation' => true,
                 'dismissable' => false,
             ),
+
+            /** Plugins recomendados para importação dos dados @since 0.15 */
+/*             array(
+                'name' => 'Really Simple CSV Importer',
+                'slug' => 'really-simple-csv-importer',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ), */
+            array(
+                'name' => 'WP Taxonomy Import',
+                'slug' => 'wp-taxonomy-import',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
+            array(
+                'name' => 'ADD From Server',
+                'slug' => 'add-from-server',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
+
+            /** plugins recomendados para debug @since 0.15 */
+            array(
+                'name' => 'Query Monitor',
+                'slug' => 'query-monitor',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
+            array(
+                'name' => 'Really Simple CSV Importer Debugger ADD-ON',
+                'source' => 'https://gist.github.com/hissy/7175656/archive/41da06a8450a994377dd34e6022500d2239aa7c6.zip',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
+
+            /** plugins recomendados para exportação dos dados @since 0.15 */
+            array(
+                'name' => 'WP All Export',
+                'slug' => 'wp-all-export',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
         );
 
         /** Config */
@@ -208,9 +256,9 @@ class Acervo_Emak
                 'labels' => array(
                     'name' => __(PLUGIN_NAME),
                     'singular_name' => __(PLUGIN_NAME),
-                    
+
                     'name_admin_bar' => __(PLUGIN_NAME, 'text_domain'),
-                    
+
                     'attributes' => __('Item Attributes', 'text_domain'),
                     'parent_item_colon' => __('Parent Item:', 'text_domain'),
                     'all_items' => __('Todas as Páginas Especiais', 'text_domain'),

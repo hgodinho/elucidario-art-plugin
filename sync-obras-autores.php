@@ -1,16 +1,5 @@
 <?php
 /**
- * Página de administração do plugin.
- *
- * @since 0.13
- * @version 0.1
- */
-?>
-<h1>Wiki-Ema</h1>
-<div class="wrap">
-<?php
-
-/**
  * Realiza a sincronia entre obras e autores programaticamente
  * 
  * @since 0.15
@@ -46,9 +35,4 @@ echo '<br>';
 
 endwhile;
 
-
-
 ?>
-</div>
-
-

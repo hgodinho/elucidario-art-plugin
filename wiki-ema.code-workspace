@@ -2,9 +2,10 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "/Users/henriquegodinho/Local Sites/wikiema/app/public/wp-content/themes/wiki-ema-template"
 		}
 	],
-	"settings": {
-		"git.ignoreLimitWarning": true
-	}
+	"settings": {}
 }
