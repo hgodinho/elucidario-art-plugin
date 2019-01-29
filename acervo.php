@@ -140,13 +140,13 @@ class Acervo_Emak
             ),
 
             /** Plugins recomendados para importação dos dados @since 0.15 */
-/*             array(
-'name' => 'Really Simple CSV Importer',
-'slug' => 'really-simple-csv-importer',
-'required' => false,
-'force_activation' => false,
-'dismissable' => true,
-), */
+        /*             array(
+        'name' => 'Really Simple CSV Importer',
+        'slug' => 'really-simple-csv-importer',
+        'required' => false,
+        'force_activation' => false,
+        'dismissable' => true,
+        ), */
             array(
                 'name' => 'WP Taxonomy Import',
                 'slug' => 'wp-taxonomy-import',
@@ -442,7 +442,8 @@ class Acervo_Emak
         );
         return $columns;
     }
-    public static function wp_wiki_obras_sortable_columns($columns){
+    public static function wp_wiki_obras_sortable_columns($columns)
+    {
         $column = array(
             'autor' => 'Autoria'
         );
