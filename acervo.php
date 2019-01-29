@@ -68,6 +68,13 @@ class Acervo_Emak
         add_action('init', 'Acervo_Emak::register_taxonomies');
 
         /**
+         * estou aqui
+         */
+        add_action('manage_obras_posts_custom_column', array($this, 'wp_wiki_custom_columns'));
+        add_filter('manage_edit-obras_columns', array($this, 'wp_wiki_obras_columns'));
+        add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
+
+        /**
          * @version 0.8
          * filtros reativado para versão `0.8` para que seja possível clonar os campos.
          * não é possível clonar os campos no ACF sem que se tenha a versão premium ( 25 USD )
@@ -134,12 +141,12 @@ class Acervo_Emak
 
             /** Plugins recomendados para importação dos dados @since 0.15 */
 /*             array(
-                'name' => 'Really Simple CSV Importer',
-                'slug' => 'really-simple-csv-importer',
-                'required' => false,
-                'force_activation' => false,
-                'dismissable' => true,
-            ), */
+'name' => 'Really Simple CSV Importer',
+'slug' => 'really-simple-csv-importer',
+'required' => false,
+'force_activation' => false,
+'dismissable' => true,
+), */
             array(
                 'name' => 'WP Taxonomy Import',
                 'slug' => 'wp-taxonomy-import',
@@ -422,6 +429,49 @@ class Acervo_Emak
         );
 
     }
+
+    public static function wp_wiki_obras_columns($columns)
+    {
+        $columns = array(
+            'cb' => '<input type="checkbox" />',
+            'thumbnail' => 'Imagem',
+            'title' => 'Título',
+            'autor' => 'Autor',
+            'tombo' => 'Tombo',
+            'datacao' => 'Data',
+        );
+        return $columns;
+    }
+    public static function wp_wiki_obras_sortable_columns($columns){
+        $column = array(
+            'autor' => 'Autoria'
+        );
+        return $columns;
+    }
+    public static function wp_wiki_custom_columns($column)
+    {
+        global $post;
+        if ($column == 'thumbnail') {
+            the_post_thumbnail('admin-thumbnail');
+        } elseif ($column == 'autor') {
+            $autor = get_post_meta( $post->ID, 'ficha_autor' );
+            /**
+             * @todo melhorar aqui para inserir link para página de editar
+             */
+            //$autor_link = get_edit_post_link($post->ID);
+            //echo '<a href="'.$autor_link.'">'.$autor[0].'</a>';
+
+            echo $autor[0];
+        } elseif ($column == 'tombo') {
+            $tombo = get_field( 'ficha_tecnica_tombo' );
+            echo $tombo;
+        }
+        elseif ($column == 'datacao') {
+            $data = get_field( 'ficha_tecnica_dataperiodo' );
+            echo $data;
+        }
+    }
+
 
     /**
      * Registra custom taxonomy
