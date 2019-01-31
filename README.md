@@ -6,6 +6,7 @@ versão `0.15`
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
+[versionamento semântico](https://semver.org/lang/pt-BR/)
 
 
 ## `0.15` [2019-01-30]
