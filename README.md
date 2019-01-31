@@ -8,9 +8,13 @@ versão `0.15`
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 
 
-## `0.15` [2019-01-23]
+## `0.15` [2019-01-30]
 ### added:
 - Função que sincroniza as obras com os autores no wiki-ema-admin.php
+- Colunas no admin
+
+### deprecated:
+- custom taxonomy tipo-autor
 
 ***
 ## `0.14` [2019-01-04]

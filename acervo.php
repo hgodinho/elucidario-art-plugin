@@ -12,16 +12,14 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /**
- *
- * @todo jeito de importar dados para wordpress levando em conta o mb-relationships
- */
-
-/**
  * Requires
  */
 require_once dirname(__FILE__) . '/lib/class-tgm-plugin-activation.php';
 require_once dirname(__FILE__) . '/acf/acf.php';
 
+/**
+ * Constantes
+ */
 const PLUGIN_NAME = "Wiki-Ema";
 const PLUGIN_SLUG = "wiki-ema";
 const TEXT_DOMAIN = "acervo-emak";
@@ -140,13 +138,13 @@ class Acervo_Emak
             ),
 
             /** Plugins recomendados para importação dos dados @since 0.15 */
-        /*             array(
-        'name' => 'Really Simple CSV Importer',
-        'slug' => 'really-simple-csv-importer',
-        'required' => false,
-        'force_activation' => false,
-        'dismissable' => true,
-        ), */
+            /*             array(
+            'name' => 'Really Simple CSV Importer',
+            'slug' => 'really-simple-csv-importer',
+            'required' => false,
+            'force_activation' => false,
+            'dismissable' => true,
+            ), */
             array(
                 'name' => 'WP Taxonomy Import',
                 'slug' => 'wp-taxonomy-import',
@@ -297,11 +295,13 @@ class Acervo_Emak
                     'author',
                     'revisions',
                     'thumbnail',
+                    'page-attributes',
+                    //'post-formats',
                 ),
                 'public' => true,
                 'publicly_queryable' => true,
                 'show_in_menu' => false,
-                'has_archive' => false,
+                'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/pag',
@@ -369,10 +369,6 @@ class Acervo_Emak
         /** registra autores */
         /**
          * @since 0.8
-         * - removi o hierchical para não gerar lentidão no server
-         * @source https://woorkup.com/beware-the-100-page-wordpress-limitation/
-         * O wordpress tem um limite de 100 páginas e
-         * `hierchical => true` gera páginas ao invés de posts
          */
         register_post_type(
             'autores',
@@ -409,12 +405,7 @@ class Acervo_Emak
                 'description' => 'Post para cadastro de Autores',
                 'supports' => array(
                     'title',
-                    //'editor',
-                    //'excerpt',
-                    'author',
                     'revisions',
-                    'thumbnail',
-                    //'custom-fields',
                     'comments',
                 ),
                 'public' => true,
@@ -442,10 +433,15 @@ class Acervo_Emak
         );
         return $columns;
     }
+    /**
+     * @todo transformar o tombo e autores em sortable
+     * essa função abaixo não está funcionando [2019-01-30]
+     *
+     */
     public static function wp_wiki_obras_sortable_columns($columns)
     {
         $column = array(
-            'autor' => 'Autoria'
+            'Tombo' => 'Tombo',
         );
         return $columns;
     }
@@ -455,24 +451,31 @@ class Acervo_Emak
         if ($column == 'thumbnail') {
             the_post_thumbnail('admin-thumbnail');
         } elseif ($column == 'autor') {
-            $autor = get_post_meta( $post->ID, 'ficha_autor' );
-            /**
-             * @todo melhorar aqui para inserir link para página de editar
-             */
-            //$autor_link = get_edit_post_link($post->ID);
-            //echo '<a href="'.$autor_link.'">'.$autor[0].'</a>';
-
-            echo $autor[0];
+            $args = array(
+                'post_type' => 'autores',
+                'relationship' => array(
+                    'id' => 'obras_to_autores',
+                    'from' => $post->ID,
+                ),
+            );
+            $autor_relationship = new WP_Query($args);
+            //var_dump($autor_relationship);
+            if ($autor_relationship->have_posts()) {
+                while ($autor_relationship->have_posts()): $autor_relationship->the_post();
+                    $autor_name = get_the_title();
+                    $autor_link = get_edit_post_link();
+                    echo '<a href="' . $autor_link . '">' . $autor_name . '</a>';
+                endwhile;
+            }
+            wp_reset_query();
         } elseif ($column == 'tombo') {
-            $tombo = get_field( 'ficha_tecnica_tombo' );
+            $tombo = get_field('ficha_tecnica_tombo');
             echo $tombo;
-        }
-        elseif ($column == 'datacao') {
-            $data = get_field( 'ficha_tecnica_dataperiodo' );
+        } elseif ($column == 'datacao') {
+            $data = get_field('ficha_tecnica_dataperiodo');
             echo $data;
         }
     }
-
 
     /**
      * Registra custom taxonomy
@@ -580,43 +583,53 @@ class Acervo_Emak
         );
         register_taxonomy_for_object_type('ambiente', 'obras');
 
-        /** registra tipos de Autores */
-        register_taxonomy(
-            'tipo_autor',
-            array('Acervo_emak'),
-            array(
-                'labels' => array(
-                    'name' => _x('Tipos de Autores', 'Taxonomy General Name', 'Acervo_emak'),
-                    'singular_name' => _x('Tipo de Autor', 'Taxonomy Singular Name', 'Acervo_emak'),
-                    'menu_name' => __('Tipo de Autor', 'Acervo_emak'),
-                    'all_items' => __('Todos os tipos', 'Acervo_emak'),
-                    'parent_item' => __('Tipo ascendente', 'Acervo_emak'),
-                    'parent_item_colon' => __('Tipo ascendente:', 'Acervo_emak'),
-                    'new_item_name' => __('Novo tipo de autor', 'Acervo_emak'),
-                    'add_new_item' => __('Adicionar novo tipo de autor', 'Acervo_emak'),
-                    'edit_item' => __('Editar tipo de autor', 'Acervo_emak'),
-                    'update_item' => __('Atualizar tipo de autor', 'Acervo_emak'),
-                    'view_item' => __('Ver tipo de autor', 'Acervo_emak'),
-                    'separate_items_with_commas' => __('Separe os tipos por vírgulas', 'Acervo_emak'),
-                    'add_or_remove_items' => __('Adicione ou remova tipos de autores', 'Acervo_emak'),
-                    'choose_from_most_used' => __('Escolha dos tipos de autores mais comuns', 'Acervo_emak'),
-                    'popular_items' => __('Tipos de autores mais comuns', 'Acervo_emak'),
-                    'search_items' => __('Procure por tipo de autor', 'Acervo_emak'),
-                    'not_found' => __('Não encontrado', 'Acervo_emak'),
-                    'no_terms' => __('Sem tipo de auto', 'Acervo_emak'),
-                    'items_list' => __('Tipos de autor por lista', 'Acervo_emak'),
-                    'items_list_navigation' => __('Navegação por lista de tipos de autor', 'Acervo_emak'),
-                ),
-                'public' => true,
-                'hierarchical' => true,
-                'show_ui' => true,
-                'show_admin_column' => true,
-                'show_in_nav_menus' => true,
-                'show_tagcloud' => true,
-                'rewrite' => array('slug' => PLUGIN_SLUG . '/tipo-autor'),
-            )
-        );
-        register_taxonomy_for_object_type('tipo_autor', 'autores');
+        /**
+         * registra tipos de Autores
+         *
+         *
+         * @deprecated 0.15
+         * não viram necessidade de diferenciar os autores por tipo,
+         * muito difícil de definir, uma vez que muitos autores transitam
+         * por diversas linguagens.
+         * */
+        /*
+    register_taxonomy(
+    'tipo_autor',
+    array('Acervo_emak'),
+    array(
+    'labels' => array(
+    'name' => _x('Tipos de Autores', 'Taxonomy General Name', 'Acervo_emak'),
+    'singular_name' => _x('Tipo de Autor', 'Taxonomy Singular Name', 'Acervo_emak'),
+    'menu_name' => __('Tipo de Autor', 'Acervo_emak'),
+    'all_items' => __('Todos os tipos', 'Acervo_emak'),
+    'parent_item' => __('Tipo ascendente', 'Acervo_emak'),
+    'parent_item_colon' => __('Tipo ascendente:', 'Acervo_emak'),
+    'new_item_name' => __('Novo tipo de autor', 'Acervo_emak'),
+    'add_new_item' => __('Adicionar novo tipo de autor', 'Acervo_emak'),
+    'edit_item' => __('Editar tipo de autor', 'Acervo_emak'),
+    'update_item' => __('Atualizar tipo de autor', 'Acervo_emak'),
+    'view_item' => __('Ver tipo de autor', 'Acervo_emak'),
+    'separate_items_with_commas' => __('Separe os tipos por vírgulas', 'Acervo_emak'),
+    'add_or_remove_items' => __('Adicione ou remova tipos de autores', 'Acervo_emak'),
+    'choose_from_most_used' => __('Escolha dos tipos de autores mais comuns', 'Acervo_emak'),
+    'popular_items' => __('Tipos de autores mais comuns', 'Acervo_emak'),
+    'search_items' => __('Procure por tipo de autor', 'Acervo_emak'),
+    'not_found' => __('Não encontrado', 'Acervo_emak'),
+    'no_terms' => __('Sem tipo de auto', 'Acervo_emak'),
+    'items_list' => __('Tipos de autor por lista', 'Acervo_emak'),
+    'items_list_navigation' => __('Navegação por lista de tipos de autor', 'Acervo_emak'),
+    ),
+    'public' => true,
+    'hierarchical' => true,
+    'show_ui' => true,
+    'show_admin_column' => true,
+    'show_in_nav_menus' => true,
+    'show_tagcloud' => true,
+    'rewrite' => array('slug' => PLUGIN_SLUG . '/tipo-autor'),
+    )
+    );
+    register_taxonomy_for_object_type('tipo_autor', 'autores');
+     */
     }
 
     /**
