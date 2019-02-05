@@ -415,6 +415,7 @@ class Acervo_Emak
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/autor',
                     'with_front' => false,
+                    'pages' => true,
                 ),
             )
         );
@@ -582,54 +583,6 @@ class Acervo_Emak
             )
         );
         register_taxonomy_for_object_type('ambiente', 'obras');
-
-        /**
-         * registra tipos de Autores
-         *
-         *
-         * @deprecated 0.15
-         * não viram necessidade de diferenciar os autores por tipo,
-         * muito difícil de definir, uma vez que muitos autores transitam
-         * por diversas linguagens.
-         * */
-        /*
-    register_taxonomy(
-    'tipo_autor',
-    array('Acervo_emak'),
-    array(
-    'labels' => array(
-    'name' => _x('Tipos de Autores', 'Taxonomy General Name', 'Acervo_emak'),
-    'singular_name' => _x('Tipo de Autor', 'Taxonomy Singular Name', 'Acervo_emak'),
-    'menu_name' => __('Tipo de Autor', 'Acervo_emak'),
-    'all_items' => __('Todos os tipos', 'Acervo_emak'),
-    'parent_item' => __('Tipo ascendente', 'Acervo_emak'),
-    'parent_item_colon' => __('Tipo ascendente:', 'Acervo_emak'),
-    'new_item_name' => __('Novo tipo de autor', 'Acervo_emak'),
-    'add_new_item' => __('Adicionar novo tipo de autor', 'Acervo_emak'),
-    'edit_item' => __('Editar tipo de autor', 'Acervo_emak'),
-    'update_item' => __('Atualizar tipo de autor', 'Acervo_emak'),
-    'view_item' => __('Ver tipo de autor', 'Acervo_emak'),
-    'separate_items_with_commas' => __('Separe os tipos por vírgulas', 'Acervo_emak'),
-    'add_or_remove_items' => __('Adicione ou remova tipos de autores', 'Acervo_emak'),
-    'choose_from_most_used' => __('Escolha dos tipos de autores mais comuns', 'Acervo_emak'),
-    'popular_items' => __('Tipos de autores mais comuns', 'Acervo_emak'),
-    'search_items' => __('Procure por tipo de autor', 'Acervo_emak'),
-    'not_found' => __('Não encontrado', 'Acervo_emak'),
-    'no_terms' => __('Sem tipo de auto', 'Acervo_emak'),
-    'items_list' => __('Tipos de autor por lista', 'Acervo_emak'),
-    'items_list_navigation' => __('Navegação por lista de tipos de autor', 'Acervo_emak'),
-    ),
-    'public' => true,
-    'hierarchical' => true,
-    'show_ui' => true,
-    'show_admin_column' => true,
-    'show_in_nav_menus' => true,
-    'show_tagcloud' => true,
-    'rewrite' => array('slug' => PLUGIN_SLUG . '/tipo-autor'),
-    )
-    );
-    register_taxonomy_for_object_type('tipo_autor', 'autores');
-     */
     }
 
     /**
@@ -866,7 +819,7 @@ class Acervo_Emak
             $wp_admin_bar->add_menu(array(
                 'id' => 'edit_fixed',
                 'parent' => false,
-                'title' => __('Edit'),
+                'title' => __('Editar'),
                 'href' => get_edit_post_link($post->id),
             ));
         }
