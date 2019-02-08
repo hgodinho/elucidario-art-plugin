@@ -412,6 +412,7 @@ class Acervo_Emak
                 'publicly_queryable' => true,
                 'show_in_menu' => false,
                 'has_archive' => true,
+                'hierarchical' => true,
                 'rewrite' => array(
                     'slug' => PLUGIN_SLUG . '/autor',
                     'with_front' => false,
