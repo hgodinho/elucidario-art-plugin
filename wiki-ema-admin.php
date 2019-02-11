@@ -10,7 +10,7 @@
 
 <?php 
 
-sincroniza_autor_obra(); 
+//sincroniza_autor_obra(); 
 //atualiza_todos_as_obras() ;
 
 /**

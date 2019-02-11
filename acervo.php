@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.15
+Version:      0.16
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -98,6 +98,16 @@ class Acervo_Emak
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
         add_action('wp_before_admin_bar_render', array($this, 'my_admin_bar_link'));
+        
+        /**
+         * Hook para chamar função que cria automaticamente as páginas especiais na ativação do plugin
+         * @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
+         * 
+         * @since 0.16
+         */
+        register_activation_hook( __FILE__, array( $this, 'cria_paginas_especiais' ) );
+        register_deactivation_hook( __FILE__, array( $this, 'deleta_paginas_especiais' ) );
+        
         /**
          * Adiciona template
          * @since 0.9
@@ -833,6 +843,98 @@ class Acervo_Emak
         }
 
     }
+
+
+    /**
+     * faz a validação se as páginas existem ou não
+     * @return boolean
+     */
+    public function the_slug_exists($post_name, $post_type) {
+        global $wpdb;
+        if($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'", 'ARRAY_A')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Cria páginas especiais na ativação do plugin.
+     * 
+     * Primeiramente ela checa se as páginas já foram criadas, se não forem, cria automaticamente as páginas.
+     *
+     * @return void
+     */
+    public function cria_paginas_especiais()
+    {
+        /**
+         * Verifica se Ambientes exitem nas páginas especiais do CPT wiki_ema, se não existir
+         * cria a página.
+         */
+        $current_user = wp_get_current_user();
+        
+        if( !$this->the_slug_exists('ambientes', 'wiki_ema')){
+            $pag_ambientes = array(
+                'post_title' => 'Ambientes',
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => $current_user->ID,
+                'post_type'   => 'wiki_ema',
+            );
+            wp_insert_post($pag_ambientes);
+        }
+        if( !$this->the_slug_exists('classificacoes', 'wiki_ema')){
+            $pag_classificacoes = array(
+                'post_title' => 'Classificações',
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => $current_user->ID,
+                'post_type'   => 'wiki_ema',
+            );
+            wp_insert_post($pag_classificacoes);
+        }
+        if( !$this->the_slug_exists('nucleos', 'wiki_ema')){
+            $pag_nucleos = array(
+                'post_title' => 'Núcleos',
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => $current_user->ID,
+                'post_type'   => 'wiki_ema',
+            );
+            wp_insert_post($pag_nucleos);
+        }
+        if( !$this->the_slug_exists('ema-klabin', 'wiki_ema')){
+            $pag_emaklabin = array(
+                'post_title' => 'Ema Klabin',
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => $current_user->ID,
+                'post_type'   => 'wiki_ema',
+            );
+            wp_insert_post($pag_emaklabin);
+        }
+    }
+
+    public function deleta_paginas_especiais(){
+        if( $this->the_slug_exists('ambientes', 'wiki_ema')){
+           $pag_ambientes_rmv = get_page_by_path( 'ambientes', 'OBJECT', 'wiki_ema' );
+           wp_delete_post( $pag_ambientes_rmv->ID, true );
+        }
+        if( $this->the_slug_exists('classificacoes', 'wiki_ema')){
+            $pag_classificacoes_rmv = get_page_by_path( 'classificacoes', 'OBJECT', 'wiki_ema' );
+            wp_delete_post( $pag_classificacoes_rmv->ID, true );
+         }
+        if( $this->the_slug_exists('nucleos', 'wiki_ema')){
+            $pag_nucleos_rmv = get_page_by_path( 'nucleos', 'OBJECT', 'wiki_ema' );
+            wp_delete_post( $pag_nucleos_rmv->ID, true );
+         }
+        if( $this->the_slug_exists('ema-klabin', 'wiki_ema')){
+            $pag_emaklabin_rmv = get_page_by_path( 'ema-klabin', 'OBJECT', 'wiki_ema' );
+            wp_delete_post( $pag_emaklabin_rmv->ID, true );
+         }
+    }
+
+
 
     /**
      * Ativador

@@ -1,7 +1,7 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.15`
+versão `0.16`
 
 # Changelog
 
@@ -9,7 +9,16 @@ versão `0.15`
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
 
-## `0.15` [2019-01-30]
+## `0.16` []
+### added: 
+- função que cria automaticamente as páginas especiais na ativação do plugin 
+- função que deleta automaticamente as páginas especiais na desativação do plugin
+> @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
+
+
+
+***
+## `0.15` [2019-02-10]
 ### added:
 - Função que sincroniza as obras com os autores no wiki-ema-admin.php
 - Colunas no admin
