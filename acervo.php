@@ -66,11 +66,11 @@ class Acervo_Emak
         add_action('init', 'Acervo_Emak::register_taxonomies');
 
         /**
-         * estou aqui
+         * Arruma admin columns
          */
         add_action('manage_obras_posts_custom_column', array($this, 'wp_wiki_custom_columns'));
         add_filter('manage_edit-obras_columns', array($this, 'wp_wiki_obras_columns'));
-        add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
+        //add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
 
         /**
          * @version 0.8
@@ -435,6 +435,7 @@ class Acervo_Emak
         );
         return $columns;
     }
+
     /**
      * @todo transformar o tombo e autores em sortable
      * essa função abaixo não está funcionando [2019-01-30]
@@ -447,6 +448,7 @@ class Acervo_Emak
         );
         return $columns;
     }
+
     public static function wp_wiki_custom_columns($column)
     {
         global $post;
@@ -460,16 +462,21 @@ class Acervo_Emak
                     'from' => $post->ID,
                 ),
             );
-            $autor_relationship = new WP_Query($args);
+            $autor_relationship = new WP_Query( $args) ;
             //var_dump($autor_relationship);
             if ($autor_relationship->have_posts()) {
                 while ($autor_relationship->have_posts()): $autor_relationship->the_post();
                     $autor_name = get_the_title();
                     $autor_link = get_edit_post_link();
                     echo '<a href="' . $autor_link . '">' . $autor_name . '</a>';
+                    wp_reset_query();
                 endwhile;
             }
-            wp_reset_query();
+
+            /**
+             * @todo arrumar ifs dessa funcão pois no acervo as colunas no admin estão com infromações repetidas
+             * [2019-02-10]
+             */
         } elseif ($column == 'tombo') {
             $tombo = get_field('ficha_tecnica_tombo');
             echo $tombo;
