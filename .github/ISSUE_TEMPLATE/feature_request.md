@@ -7,6 +7,10 @@ assignees: ''
 
 ---
 
+- [x] lista
+- [ ] a
+- [ ] fazer 
+
 **Descreva a feature sugerida.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
