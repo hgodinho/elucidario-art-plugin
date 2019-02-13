@@ -98,16 +98,16 @@ class Acervo_Emak
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
         add_action('wp_before_admin_bar_render', array($this, 'my_admin_bar_link'));
-        
+
         /**
          * Hook para chamar função que cria automaticamente as páginas especiais na ativação do plugin
          * @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
-         * 
+         *
          * @since 0.16
          */
-        register_activation_hook( __FILE__, array( $this, 'cria_paginas_especiais' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'deleta_paginas_especiais' ) );
-        
+        register_activation_hook(__FILE__, array($this, 'cria_paginas_especiais'));
+        register_deactivation_hook(__FILE__, array($this, 'deleta_paginas_especiais'));
+
         /**
          * Adiciona template
          * @since 0.9
@@ -465,6 +465,11 @@ class Acervo_Emak
         if ($column == 'thumbnail') {
             the_post_thumbnail('admin-thumbnail');
         } elseif ($column == 'autor') {
+            /**
+             * @todo arrumar ifs dessa funcão pois no acervo as colunas no admin estão com infromações repetidas
+             * [2019-02-10]
+             */
+            //var_dump($post->post_title);
             $args = array(
                 'post_type' => 'autores',
                 'relationship' => array(
@@ -472,21 +477,18 @@ class Acervo_Emak
                     'from' => $post->ID,
                 ),
             );
-            $autor_relationship = new WP_Query( $args) ;
-            //var_dump($autor_relationship);
+            $autor_relationship = new WP_Query($args);
+
             if ($autor_relationship->have_posts()) {
                 while ($autor_relationship->have_posts()): $autor_relationship->the_post();
                     $autor_name = get_the_title();
                     $autor_link = get_edit_post_link();
                     echo '<a href="' . $autor_link . '">' . $autor_name . '</a>';
-                    wp_reset_query();
                 endwhile;
+                
             }
-
-            /**
-             * @todo arrumar ifs dessa funcão pois no acervo as colunas no admin estão com infromações repetidas
-             * [2019-02-10]
-             */
+            wp_reset_query($autor_relationship);
+            
         } elseif ($column == 'tombo') {
             $tombo = get_field('ficha_tecnica_tombo');
             echo $tombo;
@@ -844,14 +846,14 @@ class Acervo_Emak
 
     }
 
-
     /**
      * faz a validação se as páginas existem ou não
      * @return boolean
      */
-    public function the_slug_exists($post_name, $post_type) {
+    public function the_slug_exists($post_name, $post_type)
+    {
         global $wpdb;
-        if($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'", 'ARRAY_A')) {
+        if ($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'", 'ARRAY_A')) {
             return true;
         } else {
             return false;
@@ -860,7 +862,7 @@ class Acervo_Emak
 
     /**
      * Cria páginas especiais na ativação do plugin.
-     * 
+     *
      * Primeiramente ela checa se as páginas já foram criadas, se não forem, cria automaticamente as páginas.
      *
      * @return void
@@ -872,69 +874,68 @@ class Acervo_Emak
          * cria a página.
          */
         $current_user = wp_get_current_user();
-        
-        if( !$this->the_slug_exists('ambientes', 'wiki_ema')){
+
+        if (!$this->the_slug_exists('ambientes', 'wiki_ema')) {
             $pag_ambientes = array(
                 'post_title' => 'Ambientes',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type'   => 'wiki_ema',
+                'post_type' => 'wiki_ema',
             );
             wp_insert_post($pag_ambientes);
         }
-        if( !$this->the_slug_exists('classificacoes', 'wiki_ema')){
+        if (!$this->the_slug_exists('classificacoes', 'wiki_ema')) {
             $pag_classificacoes = array(
                 'post_title' => 'Classificações',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type'   => 'wiki_ema',
+                'post_type' => 'wiki_ema',
             );
             wp_insert_post($pag_classificacoes);
         }
-        if( !$this->the_slug_exists('nucleos', 'wiki_ema')){
+        if (!$this->the_slug_exists('nucleos', 'wiki_ema')) {
             $pag_nucleos = array(
                 'post_title' => 'Núcleos',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type'   => 'wiki_ema',
+                'post_type' => 'wiki_ema',
             );
             wp_insert_post($pag_nucleos);
         }
-        if( !$this->the_slug_exists('ema-klabin', 'wiki_ema')){
+        if (!$this->the_slug_exists('ema-klabin', 'wiki_ema')) {
             $pag_emaklabin = array(
                 'post_title' => 'Ema Klabin',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type'   => 'wiki_ema',
+                'post_type' => 'wiki_ema',
             );
             wp_insert_post($pag_emaklabin);
         }
     }
 
-    public function deleta_paginas_especiais(){
-        if( $this->the_slug_exists('ambientes', 'wiki_ema')){
-           $pag_ambientes_rmv = get_page_by_path( 'ambientes', 'OBJECT', 'wiki_ema' );
-           wp_delete_post( $pag_ambientes_rmv->ID, true );
+    public function deleta_paginas_especiais()
+    {
+        if ($this->the_slug_exists('ambientes', 'wiki_ema')) {
+            $pag_ambientes_rmv = get_page_by_path('ambientes', 'OBJECT', 'wiki_ema');
+            wp_delete_post($pag_ambientes_rmv->ID, true);
         }
-        if( $this->the_slug_exists('classificacoes', 'wiki_ema')){
-            $pag_classificacoes_rmv = get_page_by_path( 'classificacoes', 'OBJECT', 'wiki_ema' );
-            wp_delete_post( $pag_classificacoes_rmv->ID, true );
-         }
-        if( $this->the_slug_exists('nucleos', 'wiki_ema')){
-            $pag_nucleos_rmv = get_page_by_path( 'nucleos', 'OBJECT', 'wiki_ema' );
-            wp_delete_post( $pag_nucleos_rmv->ID, true );
-         }
-        if( $this->the_slug_exists('ema-klabin', 'wiki_ema')){
-            $pag_emaklabin_rmv = get_page_by_path( 'ema-klabin', 'OBJECT', 'wiki_ema' );
-            wp_delete_post( $pag_emaklabin_rmv->ID, true );
-         }
+        if ($this->the_slug_exists('classificacoes', 'wiki_ema')) {
+            $pag_classificacoes_rmv = get_page_by_path('classificacoes', 'OBJECT', 'wiki_ema');
+            wp_delete_post($pag_classificacoes_rmv->ID, true);
+        }
+        if ($this->the_slug_exists('nucleos', 'wiki_ema')) {
+            $pag_nucleos_rmv = get_page_by_path('nucleos', 'OBJECT', 'wiki_ema');
+            wp_delete_post($pag_nucleos_rmv->ID, true);
+        }
+        if ($this->the_slug_exists('ema-klabin', 'wiki_ema')) {
+            $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'wiki_ema');
+            wp_delete_post($pag_emaklabin_rmv->ID, true);
+        }
     }
-
-
 
     /**
      * Ativador
@@ -943,8 +944,12 @@ class Acervo_Emak
     {
         self::register_post_type();
         self::register_taxonomies();
-        //self::register_relationships();
+
+        /**
+         * rewrite
+         */
         flush_rewrite_rules();
+
     }
 }
 

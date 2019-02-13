@@ -8,9 +8,9 @@
 ?>
 <h1>Wiki-Ema</h1>
 
-<?php 
+<?php
 
-//sincroniza_autor_obra(); 
+sincroniza_autor_obra();
 //atualiza_todos_as_obras() ;
 
 /**
@@ -20,7 +20,8 @@
  * @since 0.15
  * @version 0.1
  */
-function atualiza_todos_as_obras(){
+function atualiza_todos_as_obras()
+{
     echo '<h2>atualiza posts</h2>';
 
     $args = array(
@@ -38,39 +39,39 @@ function atualiza_todos_as_obras(){
     endwhile;
 }
 
-
 /**
  * Realiza a sincronia entre obras e autores programaticamente
  *
  * @since 0.15
  * @version 0.1
  */
-function sincroniza_autor_obra(){
+function sincroniza_autor_obra()
+{
     echo '<h2>obras -> autor</h2>';
     $args = array(
-    'post_type' => 'obras',
-    'posts_per_page' => -1
+        'post_type' => 'obras',
+        'posts_per_page' => -1,
     );
-    $obras_sync = new WP_Query( $args );
+    $obras_sync = new WP_Query($args);
 
     while ($obras_sync->have_posts()): $obras_sync->the_post();
         //recupera ID dos posts
         $from = get_the_ID();
 
         //recupera ID dos autores
-        $meta_autor = get_post_meta( get_the_ID(), 'ficha_autor' );
-        $to = get_page_by_title( $meta_autor[0], OBJECT, 'autores' );
+        $meta_autor = get_post_meta(get_the_ID(), 'ficha_autor');
+        $to = get_page_by_title($meta_autor[0], OBJECT, 'autores');
 
         //verifica se já estão sincronizados, se não realiza a sincronia
-        $has_connection = MB_Relationships_API::has( $from, $to->ID, 'obras_to_autores');
-        if ( $has_connection ) {
-        echo $from . ' -> ' . $to->ID . ' ok';
+        $has_connection = MB_Relationships_API::has($from, $to->ID, 'obras_to_autores');
+        if ($has_connection) {
+            //echo $from . ' -> ' . $to->ID . ' ok';
         } else {
-        MB_Relationships_API::add( $from, $to->ID, 'obras_to_autores' );
-        echo 'from '. $from . ' to ' . $to->ID;
+            MB_Relationships_API::add($from, $to->ID, 'obras_to_autores');
+            echo 'from ' . $from . ' to ' . $to->ID;
+            echo '<br>';
         }
-        echo '<br>';
     endwhile;
-    }
+}
 
 ?>
