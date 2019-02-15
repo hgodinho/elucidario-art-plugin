@@ -70,7 +70,7 @@ class Acervo_Emak
          */
         add_action('manage_obras_posts_custom_column', array($this, 'wp_wiki_custom_columns'));
         add_filter('manage_edit-obras_columns', array($this, 'wp_wiki_obras_columns'));
-        //add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
+        add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
 
         /**
          * @version 0.8
@@ -439,6 +439,7 @@ class Acervo_Emak
             'cb' => '<input type="checkbox" />',
             'thumbnail' => 'Imagem',
             'title' => 'Título',
+            //'a_z' => 'a-z',
             'autor' => 'Autor',
             'tombo' => 'Tombo',
             'datacao' => 'Data',
@@ -453,8 +454,11 @@ class Acervo_Emak
      */
     public static function wp_wiki_obras_sortable_columns($columns)
     {
-        $column = array(
-            'Tombo' => 'Tombo',
+        $columns = array(
+            'title' => 'Título',
+            //'a_z' => 'a-z',
+            'tombo' => 'Tombo',
+            'autor' => 'Autor',
         );
         return $columns;
     }
@@ -464,31 +468,17 @@ class Acervo_Emak
         global $post;
         if ($column == 'thumbnail') {
             the_post_thumbnail('admin-thumbnail');
-        } elseif ($column == 'autor') {
-            /**
-             * @todo arrumar ifs dessa funcão pois no acervo as colunas no admin estão com infromações repetidas
-             * [2019-02-10]
-             */
-            //var_dump($post->post_title);
-            $args = array(
-                'post_type' => 'autores',
-                'relationship' => array(
-                    'id' => 'obras_to_autores',
-                    'from' => $post->ID,
-                ),
-            );
-            $autor_relationship = new WP_Query($args);
+        } elseif ($column == 'a_z') {
+            $obra_glossary = get_the_terms( $post->ID, 'obra_a_z');
+            //var_dump( $obra_glossary);
 
-            if ($autor_relationship->have_posts()) {
-                while ($autor_relationship->have_posts()): $autor_relationship->the_post();
-                    $autor_name = get_the_title();
-                    $autor_link = get_edit_post_link();
-                    echo '<a href="' . $autor_link . '">' . $autor_name . '</a>';
-                endwhile;
-                
-            }
-            wp_reset_query($autor_relationship);
-            
+        } elseif ($column == 'autor') {
+            $autor_name = get_post_meta($post->ID, 'ficha_autor', true);
+            $autor = get_page_by_title($autor_name, 'OBJECT', 'autores');
+            $autor_link = get_edit_post_link($autor->ID);
+            echo '<a href="' . $autor_link . '">';
+            echo $autor_name;
+            echo '</a>';
         } elseif ($column == 'tombo') {
             $tombo = get_field('ficha_tecnica_tombo');
             echo $tombo;

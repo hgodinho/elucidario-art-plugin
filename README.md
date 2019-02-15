@@ -15,7 +15,10 @@ versão `0.16`
 - função que deleta automaticamente as páginas especiais na desativação do plugin
 > @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
 
-
+### changed:
+- wp_wiki_obras_sortable_columns
+- wp_wiki_custom_columns
+- wp_wiki_obras_columns
 
 ***
 ## `0.15` [2019-02-10]
