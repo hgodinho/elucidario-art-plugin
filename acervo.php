@@ -439,7 +439,7 @@ class Acervo_Emak
             'cb' => '<input type="checkbox" />',
             'thumbnail' => 'Imagem',
             'title' => 'Título',
-            //'a_z' => 'a-z',
+            'a_z' => 'a-z',
             'autor' => 'Autor',
             'tombo' => 'Tombo',
             'datacao' => 'Data',
@@ -456,7 +456,7 @@ class Acervo_Emak
     {
         $columns = array(
             'title' => 'Título',
-            //'a_z' => 'a-z',
+            'a_z' => 'a-z',
             'tombo' => 'Tombo',
             'autor' => 'Autor',
         );
@@ -469,8 +469,16 @@ class Acervo_Emak
         if ($column == 'thumbnail') {
             the_post_thumbnail('admin-thumbnail');
         } elseif ($column == 'a_z') {
+            
             $obra_glossary = get_the_terms( $post->ID, 'obra_a_z');
-            //var_dump( $obra_glossary);
+            /**
+             * arrumar aqui
+             */
+            if(isset($obra_glossary->name)){
+                echo $obra_glossary->name;
+            }
+            //echo $obra_glossary->name;
+            //var_dump( $obra_glossary );
 
         } elseif ($column == 'autor') {
             $autor_name = get_post_meta($post->ID, 'ficha_autor', true);
