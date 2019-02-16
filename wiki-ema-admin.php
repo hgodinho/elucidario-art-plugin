@@ -5,12 +5,8 @@
  * @since 0.13
  * @version 0.1
  */
-?>
-<h1>Wiki-Ema</h1>
 
-<?php
-
-sincroniza_autor_obra();
+//sincroniza_autor_obra();
 //atualiza_todos_as_obras() ;
 
 /**
@@ -22,8 +18,10 @@ sincroniza_autor_obra();
  */
 function atualiza_todos_as_obras()
 {
+    //global $wpdb;
     echo '<h2>atualiza posts</h2>';
 
+    /*
     $args = array(
         'post_type' => 'obras',
         'posts_per_page' => 10,
@@ -37,6 +35,8 @@ function atualiza_todos_as_obras()
         update_field('field_5bfd4663b4645', $tombo, $obra_id);
         wp_update_post(array('ID' => $obra_id));
     endwhile;
+    */
+    wp_die();
 }
 
 /**
@@ -73,5 +73,16 @@ function sincroniza_autor_obra()
         }
     endwhile;
 }
-
 ?>
+
+
+<div class="wrap">
+    <h1>Wiki-Ema</h1>
+    <form id="wiki-ema-form" action="" method="POST">
+        <input type="submit" name="wiki-ema-submit" class="button-primary sincroniza" value="Sincroniza Autores e Obras">
+    </form>
+</div>
+
+
+<?php
+add_action('wp_ajax_sincroniza_autor_obra', 'sincroniza_autor_obra');

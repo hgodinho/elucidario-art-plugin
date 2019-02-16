@@ -16,6 +16,7 @@ License URI:  https://www.gnu.org/licenses/gpl-2.0.html
  */
 require_once dirname(__FILE__) . '/lib/class-tgm-plugin-activation.php';
 require_once dirname(__FILE__) . '/acf/acf.php';
+//require_once dirname(__FILE__) . '/ajax/ajax-admin-wiki-ema.php';
 
 /**
  * Constantes
@@ -23,6 +24,7 @@ require_once dirname(__FILE__) . '/acf/acf.php';
 const PLUGIN_NAME = "Wiki-Ema";
 const PLUGIN_SLUG = "wiki-ema";
 const TEXT_DOMAIN = "acervo-emak";
+
 
 /**
  * Classe principal
@@ -56,14 +58,17 @@ class Acervo_Emak
          * */
         add_action('tgmpa_register', array($this, 'check_required_plugins'));
 
+
         /**
          * adiciona menu item para organização no admin
          */
         add_action('admin_menu', array($this, 'custom_menu_admin_page'));
 
+
         /** adiciona as actions ds post-types e das taxonomies */
         add_action('init', 'Acervo_Emak::register_post_type');
         add_action('init', 'Acervo_Emak::register_taxonomies');
+
 
         /**
          * Arruma admin columns
@@ -71,6 +76,7 @@ class Acervo_Emak
         add_action('manage_obras_posts_custom_column', array($this, 'wp_wiki_custom_columns'));
         add_filter('manage_edit-obras_columns', array($this, 'wp_wiki_obras_columns'));
         add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
+
 
         /**
          * @version 0.8
@@ -80,10 +86,12 @@ class Acervo_Emak
         add_filter('rwmb_meta_boxes', array($this, 'obra_metabox'));
         add_filter('rwmb_meta_boxes', array($this, 'autor_metabox'));
 
+
         /**
-         * Cria relações usando meta-box
+         * Cria relações usando meta-box relationship API
          */
         add_action('mb_relationships_init', array($this, 'cria_relacoes'));
+
 
         /**
          * Configuração do ACF
@@ -97,7 +105,16 @@ class Acervo_Emak
         add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
 
+
+        /**
+         * Cria link de editar na barra admin para os cpts
+         */
         add_action('wp_before_admin_bar_render', array($this, 'my_admin_bar_link'));
+
+
+        /** enqueue dos scripts do plugin */
+        add_action('admin_enqueue_scripts', array($this,'enqueue_admin'));
+
 
         /**
          * Hook para chamar função que cria automaticamente as páginas especiais na ativação do plugin
@@ -107,19 +124,8 @@ class Acervo_Emak
          */
         register_activation_hook(__FILE__, array($this, 'cria_paginas_especiais'));
         register_deactivation_hook(__FILE__, array($this, 'deleta_paginas_especiais'));
-
-        /**
-         * Adiciona template
-         * @since 0.9
-         *
-         * Template será usado um tema específico, adaptado do wp-bootstrap-starter
-         * @source https://br.wordpress.org/themes/wp-bootstrap-starter/
-         *
-         * Para fazer a integração será usado o plugin multiple-themes
-         * @source https://br.wordpress.org/plugins/jonradio-multiple-themes/
-         */
-
     }
+
 
     /**
      * Verifica plugins requeridos
@@ -147,14 +153,20 @@ class Acervo_Emak
                 'dismissable' => false,
             ),
 
-            /** Plugins recomendados para importação dos dados @since 0.15 */
-            /*             array(
+            /** 
+             * Plugins recomendados para importação dos dados @since 0.15
+             */
+
+             /** possível @bug */
+            /*array(
             'name' => 'Really Simple CSV Importer',
             'slug' => 'really-simple-csv-importer',
             'required' => false,
             'force_activation' => false,
             'dismissable' => true,
             ), */
+
+            /** WP Taxonomy Import */
             array(
                 'name' => 'WP Taxonomy Import',
                 'slug' => 'wp-taxonomy-import',
@@ -162,6 +174,17 @@ class Acervo_Emak
                 'force_activation' => false,
                 'dismissable' => true,
             ),
+
+            /** Multiple Themes */
+            array(
+                'name' => 'Multiple Themes',
+                'slug' => 'jonradio-multiple-themes',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
+
+            /** ADD From Server */
             array(
                 'name' => 'ADD From Server',
                 'slug' => 'add-from-server',
@@ -171,6 +194,7 @@ class Acervo_Emak
             ),
 
             /** plugins recomendados para debug @since 0.15 */
+            /** Query Monitor */
             array(
                 'name' => 'Query Monitor',
                 'slug' => 'query-monitor',
@@ -178,6 +202,8 @@ class Acervo_Emak
                 'force_activation' => false,
                 'dismissable' => true,
             ),
+
+            /** Really Simple CSV Importer Debugger ADD-ON */
             array(
                 'name' => 'Really Simple CSV Importer Debugger ADD-ON',
                 'source' => 'https://gist.github.com/hissy/7175656/archive/41da06a8450a994377dd34e6022500d2239aa7c6.zip',
@@ -187,6 +213,7 @@ class Acervo_Emak
             ),
 
             /** plugins recomendados para exportação dos dados @since 0.15 */
+            /** WP All Export */
             array(
                 'name' => 'WP All Export',
                 'slug' => 'wp-all-export',
@@ -228,6 +255,7 @@ class Acervo_Emak
         tgmpa($plugins, $config);
     }
 
+
     /**
      * Funções de configurações do ACF
      *
@@ -256,6 +284,7 @@ class Acervo_Emak
         $paths[] = plugin_dir_path(__FILE__) . 'acf/acf-json';
         return $paths;
     }
+
 
     /**
      * Registra custom-post types
@@ -433,6 +462,13 @@ class Acervo_Emak
 
     }
 
+
+    /**
+     * Organiza e acrescenta as colunas do cpt Obras admin
+     *
+     * @param [type] $columns
+     * @return void
+     */
     public static function wp_wiki_obras_columns($columns)
     {
         $columns = array(
@@ -447,9 +483,30 @@ class Acervo_Emak
         return $columns;
     }
 
+
     /**
-     * @todo transformar o tombo e autores em sortable
-     * essa função abaixo não está funcionando [2019-01-30]
+     * Chama Ajax Admin
+     *
+     * @param [type] $hook
+     * @return void
+     */
+    public function enqueue_admin($hook)
+    {
+        if ('index.php' != $hook) {
+            return;
+        }
+        $version = rand(0, 999);
+        wp_enqueue_script('wiki_ema_admin_ajax', plugin_dir_url(__FILE__) . '/js/wiki-ema-admin.js', array('jquery'), $version);
+    }
+
+
+    /**
+     * Faz com que as colunas possam ser classificáveis.
+     * 
+     * - @todo está funcionando, porem de maneira estranha.
+     * > precisa entender mais como funciona para que fazer uma classificação
+     * > mais confiável. [2019-02-16]
+     * 
      *
      */
     public static function wp_wiki_obras_sortable_columns($columns)
@@ -463,18 +520,24 @@ class Acervo_Emak
         return $columns;
     }
 
+    /**
+     * Gera as colunas do cpt Obras admin
+     *
+     * @param [type] $column
+     * @return void
+     */
     public static function wp_wiki_custom_columns($column)
     {
         global $post;
         if ($column == 'thumbnail') {
             the_post_thumbnail('admin-thumbnail');
         } elseif ($column == 'a_z') {
-            
-            $obra_glossary = get_the_terms( $post->ID, 'obra_a_z');
+
+            $obra_glossary = get_the_terms($post->ID, 'obra_az');
             /**
              * arrumar aqui
              */
-            if(isset($obra_glossary->name)){
+            if (isset($obra_glossary->name)) {
                 echo $obra_glossary->name;
             }
             //echo $obra_glossary->name;
@@ -496,8 +559,9 @@ class Acervo_Emak
         }
     }
 
+
     /**
-     * Registra custom taxonomy
+     * Registra Custom Taxonomys
      *
      * @return void
      */
@@ -603,6 +667,7 @@ class Acervo_Emak
         register_taxonomy_for_object_type('ambiente', 'obras');
     }
 
+
     /**
      * Registra um custom menu no admin.
      *
@@ -631,10 +696,18 @@ class Acervo_Emak
         add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
     }
 
+
+    /**
+     * Adiciona página de template do Wiki-Ema admin
+     *
+     * @return void
+     */
     public static function template_plugin_admin()
     {
+        //$global $wiki_ema_admin;
         include 'wiki-ema-admin.php';
     }
+
 
     /**
      * Cria metaboxes com Meta-box plugin
@@ -766,6 +839,7 @@ class Acervo_Emak
         return $meta_boxes;
     }
 
+
     /**
      * Cria relações
      *
@@ -819,6 +893,7 @@ class Acervo_Emak
         );
     }
 
+
     /**
      * Insere botão de editar custom posts na admin bar
      *
@@ -844,6 +919,7 @@ class Acervo_Emak
 
     }
 
+
     /**
      * faz a validação se as páginas existem ou não
      * @return boolean
@@ -857,6 +933,7 @@ class Acervo_Emak
             return false;
         }
     }
+
 
     /**
      * Cria páginas especiais na ativação do plugin.
@@ -934,6 +1011,7 @@ class Acervo_Emak
             wp_delete_post($pag_emaklabin_rmv->ID, true);
         }
     }
+
 
     /**
      * Ativador
