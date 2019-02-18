@@ -46,7 +46,6 @@ class Acervo_Emak
      */
     private function __construct()
     {
-
         /**
          *
          * @version 0.8
@@ -54,36 +53,36 @@ class Acervo_Emak
          * o meta-box na ativação do plugin.
          *
          * */
-        add_action('tgmpa_register', array($this, 'check_required_plugins'));
+        add_action('tgmpa_register', array($this, 'wiki_ema_check_required_plugins'));
 
         /**
          * adiciona menu item para organização no admin
          */
-        add_action('admin_menu', array($this, 'custom_menu_admin_page'));
+        add_action('admin_menu', array($this, 'wiki_ema_custom_menu_admin_page'));
 
         /** adiciona as actions ds post-types e das taxonomies */
-        add_action('init', 'Acervo_Emak::register_post_type');
-        add_action('init', 'Acervo_Emak::register_taxonomies');
+        add_action('init', 'Acervo_Emak::wiki_ema_register_post_type');
+        add_action('init', 'Acervo_Emak::wiki_ema_register_taxonomies');
 
         /**
          * Arruma admin columns
          */
-        add_action('manage_obras_posts_custom_column', array($this, 'wp_wiki_custom_columns'));
-        add_filter('manage_edit-obras_columns', array($this, 'wp_wiki_obras_columns'));
-        add_filter('manage_edit-obras_sortable_columns', array($this, 'wp_wiki_obras_sortable_columns'));
+        add_action('manage_obras_posts_custom_column', array($this, 'wiki_ema_custom_columns'));
+        add_filter('manage_edit-obras_columns', array($this, 'wiki_ema_obras_columns'));
+        add_filter('manage_edit-obras_sortable_columns', array($this, 'wiki_ema_obras_sortable_columns'));
 
         /**
          * @version 0.8
          * filtros reativado para versão `0.8` para que seja possível clonar os campos.
          * não é possível clonar os campos no ACF sem que se tenha a versão premium ( 25 USD )
          * */
-        add_filter('rwmb_meta_boxes', array($this, 'obra_metabox'));
-        add_filter('rwmb_meta_boxes', array($this, 'autor_metabox'));
+        add_filter('rwmb_meta_boxes', array($this, 'wiki_ema_obra_metabox'));
+        add_filter('rwmb_meta_boxes', array($this, 'wiki_ema_autor_metabox'));
 
         /**
          * Cria relações usando meta-box
          */
-        add_action('mb_relationships_init', array($this, 'cria_relacoes'));
+        add_action('mb_relationships_init', array($this, 'wiki_ema_cria_relacoes'));
 
         /**
          * Configuração do ACF
@@ -91,22 +90,32 @@ class Acervo_Emak
          * @since 0.7
          *
          */
-        add_filter('acf/settings/path', array($this, 'my_acf_settings_path'));
-        //add_filter('acf/settings/dir', array($this, 'my_acf_settings_dir'));
-        //add_filter('acf/settings/show_admin', '__return_false');
-        add_filter('acf/settings/save_json', array($this, 'my_acf_json_save_point'));
-        add_filter('acf/settings/load_json', array($this, 'my_acf_json_load_point'));
+        add_filter('acf/settings/path', array($this, 'wiki_ema_acf_settings_path'));
+        //add_filter('acf/settings/dir', array($this, 'wiki_ema_acf_settings_dir'));
+        add_filter('acf/settings/show_admin', '__return_false');
+        add_filter('acf/settings/save_json', array($this, 'wiki_ema_acf_json_save_point'));
+        add_filter('acf/settings/load_json', array($this, 'wiki_ema_acf_json_load_point'));
 
-        add_action('wp_before_admin_bar_render', array($this, 'my_admin_bar_link'));
+        /** Cria botão de editar na barra do admin */
+        add_action('wp_before_admin_bar_render', array($this, 'wiki_ema_admin_bar_link'));
+
+        //add_action( 'admin_post_wiki_ema_sincroniza_autor_obra', array($this,'wiki_ema_sincroniza_autor_obra' ));
+        add_action('wp_ajax_wiki_ema_sincroniza_autor_obra', array($this, 'wiki_ema_sincroniza_autor_obra'));
+        add_action('wp_ajax_wiki_ema_atualiza_todos_cpts', array($this, 'wiki_ema_atualiza_todos_cpts'));
 
         /**
-         * Hook para chamar função que cria automaticamente as páginas especiais na ativação do plugin
+         * enqueue dos scripts ajax do admin
+         */
+        add_action('admin_enqueue_scripts', array($this, 'wiki_ema_load_scripts'));
+
+        /**
+         * Hook para chamar função que executa ações na ativação e desativação do plugin
          * @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
          *
          * @since 0.16
          */
-        register_activation_hook(__FILE__, array($this, 'cria_paginas_especiais'));
-        register_deactivation_hook(__FILE__, array($this, 'deleta_paginas_especiais'));
+        register_activation_hook(__FILE__, array($this, 'wiki_ema_activation'));
+        register_deactivation_hook(__FILE__, array($this, 'wiki_ema_deactivation'));
 
         /**
          * Adiciona template
@@ -126,7 +135,7 @@ class Acervo_Emak
      *
      * *obs: função reativada para versao `0.8`
      */
-    public function check_required_plugins()
+    public function wiki_ema_check_required_plugins()
     {
         /** Plugins */
         $plugins = array(
@@ -225,6 +234,8 @@ class Acervo_Emak
                 'nag_type' => 'updated',
             ),
         );
+
+        /** Function */
         tgmpa($plugins, $config);
     }
 
@@ -235,22 +246,22 @@ class Acervo_Emak
      *
      */
     /** 1. customize ACF path */
-    public function my_acf_settings_path($path)
+    public function wiki_ema_acf_settings_path($path)
     {
         $path = plugin_dir_path(__FILE__) . 'acf/';
         return $path;
     }
-    public function my_acf_settings_dir($dir)
+    public function wiki_ema_acf_settings_dir($dir)
     {
         $dir = plugin_dir_path(__FILE__) . 'acf/';
         return $dir;
     }
-    public function my_acf_json_save_point($path)
+    public function wiki_ema_acf_json_save_point($path)
     {
         $path = plugin_dir_path(__FILE__) . 'acf/acf-json';
         return $path;
     }
-    public function my_acf_json_load_point($paths)
+    public function wiki_ema_acf_json_load_point($paths)
     {
         unset($paths[0]);
         $paths[] = plugin_dir_path(__FILE__) . 'acf/acf-json';
@@ -262,7 +273,7 @@ class Acervo_Emak
      *
      * @return void
      */
-    public static function register_post_type()
+    public static function wiki_ema_register_post_type()
     {
         /** registra wiki-ema */
         register_post_type(
@@ -433,7 +444,13 @@ class Acervo_Emak
 
     }
 
-    public static function wp_wiki_obras_columns($columns)
+    /**
+     * Cria colunas personalizadas no admin cpt Obras
+     *
+     * @param [type] $columns
+     * @return void
+     */
+    public static function wiki_ema_obras_columns($columns)
     {
         $columns = array(
             'cb' => '<input type="checkbox" />',
@@ -448,11 +465,12 @@ class Acervo_Emak
     }
 
     /**
-     * @todo transformar o tombo e autores em sortable
-     * essa função abaixo não está funcionando [2019-01-30]
+     * Faz com que as colunas personalizadas sejam classificaveis
      *
+     * @param [type] $columns
+     * @return void
      */
-    public static function wp_wiki_obras_sortable_columns($columns)
+    public static function wiki_ema_obras_sortable_columns($columns)
     {
         $columns = array(
             'title' => 'Título',
@@ -463,7 +481,13 @@ class Acervo_Emak
         return $columns;
     }
 
-    public static function wp_wiki_custom_columns($column)
+    /**
+     * Gera o conteúdo para as colunas classificaveis
+     *
+     * @param [type] $column
+     * @return void
+     */
+    public static function wiki_ema_custom_columns($column)
     {
         global $post;
         if ($column == 'thumbnail') {
@@ -474,7 +498,7 @@ class Acervo_Emak
                 'fields' => 'slugs',
             ));
             //var_dump($obra_glossary);;
-           echo $obra_glossary[0];
+            echo $obra_glossary[0];
 
         } elseif ($column == 'autor') {
             $autor_name = get_post_meta($post->ID, 'ficha_autor', true);
@@ -497,7 +521,7 @@ class Acervo_Emak
      *
      * @return void
      */
-    public static function register_taxonomies()
+    public static function wiki_ema_register_taxonomies()
     {
         /** registra Classificação para Obras */
         register_taxonomy(
@@ -604,32 +628,152 @@ class Acervo_Emak
      *
      * @since 0.13
      */
-    public static function custom_menu_admin_page()
+    public static function wiki_ema_custom_menu_admin_page()
     {
-        $key = 'wiki-ema' . '/wiki-ema-admin';
+        $page_title = __('Wiki-Ema', TEXT_DOMAIN);
+        $menu_title = __('Wiki-Ema', TEXT_DOMAIN);
+        $capability = 'manage_options';
+        $menu_slug = 'wiki-ema' . '/wiki-ema-admin';
+        $function = array($this, 'wiki_ema_template_plugin_admin');
+        $dashicon = 'dashicons-admin-customizer';
+        $position = 3;
 
-        add_menu_page(
-            __('Wiki-Ema', 'textdomain'),
-            'Wiki-Ema',
-            'manage_options',
-            $key,
-            array($this, 'template_plugin_admin'),
-            'dashicons-admin-customizer',
-            3
+        global $wiki_ema_admin;
+
+        $wiki_ema_admin = add_menu_page(
+            $page_title,
+            $menu_title,
+            $capability,
+            $menu_slug,
+            $function,
+            $dashicon,
+            $position
         );
 
-        add_submenu_page($key, 'Páginas Especiais', 'Página especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
-        add_submenu_page($key, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
-        add_submenu_page($key, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
-        add_submenu_page($key, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
-        add_submenu_page($key, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
-        add_submenu_page($key, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
-        add_submenu_page($key, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
+        add_submenu_page($menu_slug, 'Páginas Especiais', 'Página especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
+        add_submenu_page($menu_slug, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
+        add_submenu_page($menu_slug, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
+        add_submenu_page($menu_slug, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
+        add_submenu_page($menu_slug, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
+        add_submenu_page($menu_slug, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
+        add_submenu_page($menu_slug, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
     }
 
-    public static function template_plugin_admin()
+    /**
+     * Chama o Wiki-Ema Admin
+     *
+     * @return void
+     */
+    public static function wiki_ema_template_plugin_admin()
     {
         include 'wiki-ema-admin.php';
+    }
+
+    /**
+     * Realiza a sincronia entre obras e autores programaticamente
+     *
+     * @since 0.15
+     * @version 0.1
+     */
+    public function wiki_ema_sincroniza_autor_obra()
+    {
+        if (!isset($_POST['wiki_ema_sync_nonce']) || !wp_verify_nonce($_POST['wiki_ema_sync_nonce'], 'wiki_ema_sync_nonce')) {
+            wp_die('Sem autorização');
+        }
+
+        if (current_user_can('wiki_ema_capabilities')) {
+            $args = array(
+                'post_type' => 'obras',
+                'posts_per_page' => -1,
+            );
+            $obras_sync = new WP_Query($args);
+            echo '<ol>';
+            while ($obras_sync->have_posts()): $obras_sync->the_post();
+                //recupera ID dos posts
+                $from = get_the_ID();
+
+                //recupera ID dos autores
+                $meta_autor = get_post_meta(get_the_ID(), 'ficha_autor');
+                $to = get_page_by_title($meta_autor[0], OBJECT, 'autores');
+
+                //verifica se já estão sincronizados, se não realiza a sincronia
+                $has_connection = MB_Relationships_API::has($from, $to->ID, 'obras_to_autores');
+                if ($has_connection) {
+                    echo '<li>' . $from . ' -> ' . $to->ID . ' ok' . '</li>';
+                } else {
+                    MB_Relationships_API::add($from, $to->ID, 'obras_to_autores');
+                    echo '<li>from ' . $from . ' to ' . $to->ID . '</li>';
+                }
+            endwhile;
+            echo '</ol>';
+            wp_die();
+        } else {
+            wp_die('Você não tem permissão para executar essa função.');
+
+        }
+    }
+
+    /**
+     * Função para atualizar as obras quando importar, não necessitando de atualização manual
+     * para que os custom fields acf aparecem no front-end
+     *
+     * @since 0.15
+     * @version 0.1
+     */
+    public function wiki_ema_atualiza_todos_cpts()
+    {
+        if (!isset($_POST['wiki_ema_update_nonce']) || !wp_verify_nonce($_POST['wiki_ema_update_nonce'], 'wiki_ema_update_nonce')) {
+            wp_die('Sem autorização');
+        }
+        if (current_user_can('wiki_ema_capabilities')) {
+            $args = array(
+                'post_type' => 'obras',
+                'posts_per_page' => 10,
+            );
+            $obras_update = new WP_Query($args);
+            //print_r($obras_update);
+            echo '<ol>';
+            while ($obras_update->have_posts()): $obras_update->the_post();
+                $tombo = get_field('ficha_tecnica_tombo');
+                $obra_id = get_the_ID();
+                echo '<li>id: ' . $obra_id . '   tombo: ' . $tombo . '</li>';
+                //update_field('ficha_tecnica_tombo', $tombo, $obra_id);
+                wp_update_post(array('ID' => $obra_id));
+            endwhile;
+            echo '</ol>';
+            wp_die();
+        } else {
+            wp_die('Você não tem permissão para executar essa função.');
+
+        }
+    }
+
+    /**
+     * Load dos scripts para funcionamento adequado do plugin Wiki-Ema
+     *
+     * @param [type] $hook
+     * @return void
+     */
+    public function wiki_ema_load_scripts($hook)
+    {
+        global $wiki_ema_admin;
+
+        if ($hook != $wiki_ema_admin) {
+            return;
+        }
+
+        $version = rand(0, 999);
+        wp_enqueue_script('wiki_ema_admin', plugin_dir_url(__FILE__) . 'js/wiki-ema-admin.js', 'jquery', $version, true);
+        wp_localize_script('wiki_ema_admin', 'wiki_ema_sync_vars', array(
+            'wiki_ema_sync_nonce' => wp_create_nonce('wiki_ema_sync_nonce'),
+        ));
+        wp_localize_script('wiki_ema_admin', 'wiki_ema_update_vars', array(
+            'wiki_ema_update_nonce' => wp_create_nonce('wiki_ema_update_nonce'),
+        ));
+
+        wp_register_style('wiki_ema_styles', plugins_url('wiki-ema/css/styles.css'));
+        wp_enqueue_style('wiki_ema_styles');
+
     }
 
     /**
@@ -642,7 +786,7 @@ class Acervo_Emak
      * @return $meta-boxes
      */
     /** Obra metabox */
-    public function obra_metabox($meta_boxes)
+    public function wiki_ema_obra_metabox($meta_boxes)
     {
         $prefix = 'obra-metabox_';
         $meta_boxes[] =
@@ -712,7 +856,7 @@ class Acervo_Emak
         return $meta_boxes;
     }
     /** Autor metabox */
-    public function autor_metabox($meta_boxes)
+    public function wiki_ema_autor_metabox($meta_boxes)
     {
         $prefix = 'autor-metabox_';
         $meta_boxes[] =
@@ -763,11 +907,11 @@ class Acervo_Emak
     }
 
     /**
-     * Cria relações
+     * Cria relações com MB_Relationships_API
      *
      * @since 0.8
      */
-    public function cria_relacoes()
+    public function wiki_ema_cria_relacoes()
     {
         MB_Relationships_API::register(
             array(
@@ -821,7 +965,7 @@ class Acervo_Emak
      * @since 0.14
      * @return void
      */
-    public function my_admin_bar_link()
+    public function wiki_ema_admin_bar_link()
     {
         global $wp_admin_bar;
         global $post;
@@ -844,7 +988,7 @@ class Acervo_Emak
      * faz a validação se as páginas existem ou não
      * @return boolean
      */
-    public function the_slug_exists($post_name, $post_type)
+    public function wiki_ema_the_slug_exists($post_name, $post_type)
     {
         global $wpdb;
         if ($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'", 'ARRAY_A')) {
@@ -861,7 +1005,7 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function cria_paginas_especiais()
+    public function wiki_ema_activation()
     {
         /**
          * Verifica se Ambientes exitem nas páginas especiais do CPT wiki_ema, se não existir
@@ -869,7 +1013,7 @@ class Acervo_Emak
          */
         $current_user = wp_get_current_user();
 
-        if (!$this->the_slug_exists('ambientes', 'wiki_ema')) {
+        if (!$this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
             $pag_ambientes = array(
                 'post_title' => 'Ambientes',
                 'post_content' => '',
@@ -879,7 +1023,7 @@ class Acervo_Emak
             );
             wp_insert_post($pag_ambientes);
         }
-        if (!$this->the_slug_exists('classificacoes', 'wiki_ema')) {
+        if (!$this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
             $pag_classificacoes = array(
                 'post_title' => 'Classificações',
                 'post_content' => '',
@@ -889,7 +1033,7 @@ class Acervo_Emak
             );
             wp_insert_post($pag_classificacoes);
         }
-        if (!$this->the_slug_exists('nucleos', 'wiki_ema')) {
+        if (!$this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
             $pag_nucleos = array(
                 'post_title' => 'Núcleos',
                 'post_content' => '',
@@ -899,7 +1043,7 @@ class Acervo_Emak
             );
             wp_insert_post($pag_nucleos);
         }
-        if (!$this->the_slug_exists('ema-klabin', 'wiki_ema')) {
+        if (!$this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
             $pag_emaklabin = array(
                 'post_title' => 'Ema Klabin',
                 'post_content' => '',
@@ -909,41 +1053,45 @@ class Acervo_Emak
             );
             wp_insert_post($pag_emaklabin);
         }
+
+        $editor = get_role('editor');
+        $admin = get_role('administrator');
+        $editor->add_cap('wiki_ema_capabilities');
+        $admin->add_cap('wiki_ema_capabilities');
+
+        self::wiki_ema_register_post_type();
+        self::wiki_ema_register_taxonomies();
+
     }
 
-    public function deleta_paginas_especiais()
+    public function wiki_ema_deactivation()
     {
-        if ($this->the_slug_exists('ambientes', 'wiki_ema')) {
+        if ($this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
             $pag_ambientes_rmv = get_page_by_path('ambientes', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_ambientes_rmv->ID, true);
         }
-        if ($this->the_slug_exists('classificacoes', 'wiki_ema')) {
+        if ($this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
             $pag_classificacoes_rmv = get_page_by_path('classificacoes', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_classificacoes_rmv->ID, true);
         }
-        if ($this->the_slug_exists('nucleos', 'wiki_ema')) {
+        if ($this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
             $pag_nucleos_rmv = get_page_by_path('nucleos', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_nucleos_rmv->ID, true);
         }
-        if ($this->the_slug_exists('ema-klabin', 'wiki_ema')) {
+        if ($this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
             $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_emaklabin_rmv->ID, true);
         }
-    }
 
-    /**
-     * Ativador
-     */
-    public static function activate()
-    {
-        self::register_post_type();
-        self::register_taxonomies();
+        $editor = get_role('editor');
+        $admin = get_role('administrator');
+        $editor->remove_cap('wiki_ema_capabilities');
+        $admin->remove_cap('wiki_ema_capabilities');
 
         /**
          * rewrite
          */
         flush_rewrite_rules();
-
     }
 }
 
@@ -951,5 +1099,5 @@ class Acervo_Emak
  * instancias
  */
 Acervo_Emak::getInstance();
-register_activation_hook(__FILE__, 'Acervo_Emak::activate');
-register_deactivation_hook(__FILE__, 'flush_rewrite_rules');
+//register_activation_hook(__FILE__, 'Acervo_Emak::activate');
+//register_deactivation_hook(__FILE__, 'flush_rewrite_rules');
