@@ -3,7 +3,7 @@
 Plugin Name:  Acervo Ema Klabin
 Plugin URI:   https://emaklabin.org.br/acervo
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.16
+Version:      0.17
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -114,8 +114,8 @@ class Acervo_Emak
          *
          * @since 0.16
          */
-        register_activation_hook(__FILE__, array($this, 'wiki_ema_activation'));
-        register_deactivation_hook(__FILE__, array($this, 'wiki_ema_deactivation'));
+        register_activation_hook(__FILE__, array($this, 'wiki_ema_activacao'));
+        register_deactivation_hook(__FILE__, array($this, 'wiki_ema_desativacao'));
 
         /**
          * Adiciona template
@@ -650,13 +650,13 @@ class Acervo_Emak
             $position
         );
 
-        add_submenu_page($menu_slug, 'Páginas Especiais', 'Página especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
+        add_submenu_page($menu_slug, 'Páginas Especiais', 'Páginas especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
         add_submenu_page($menu_slug, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
-        add_submenu_page($menu_slug, 'Classificação', 'Classificação Obras', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
-        add_submenu_page($menu_slug, 'Núcleo', 'Núcleo Obras', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
-        add_submenu_page($menu_slug, 'Ambiente', 'Ambiente Obras', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
         add_submenu_page($menu_slug, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
-        add_submenu_page($menu_slug, 'Tipo Autor', 'Tipo Autor', 'manage_categories', 'edit-tags.php?taxonomy=tipo_autor&post_type=autores');
+        add_submenu_page($menu_slug, 'Classificação', 'Classificações', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
+        add_submenu_page($menu_slug, 'Núcleo', 'Núcleos', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
+        add_submenu_page($menu_slug, 'Ambiente', 'Ambientes', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
+        
     }
 
     /**
@@ -738,7 +738,7 @@ class Acervo_Emak
                 $obra_id = get_the_ID();
                 echo '<li>id: ' . $obra_id . '   tombo: ' . $tombo . '</li>';
                 //update_field('ficha_tecnica_tombo', $tombo, $obra_id);
-                wp_update_post(array('ID' => $obra_id));
+                wp_update_post(array('ID' => $obra_id), true);
             endwhile;
             echo '</ol>';
             wp_die();
@@ -999,13 +999,13 @@ class Acervo_Emak
     }
 
     /**
-     * Cria páginas especiais na ativação do plugin.
+     * Cria páginas especiais
      *
-     * Primeiramente ela checa se as páginas já foram criadas, se não forem, cria automaticamente as páginas.
+     * Função chamada no hook de ativação
      *
      * @return void
      */
-    public function wiki_ema_activation()
+    public function wiki_ema_cria_paginas()
     {
         /**
          * Verifica se Ambientes exitem nas páginas especiais do CPT wiki_ema, se não existir
@@ -1013,6 +1013,9 @@ class Acervo_Emak
          */
         $current_user = wp_get_current_user();
 
+        /**
+         * Cria página Ambientes
+         */
         if (!$this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
             $pag_ambientes = array(
                 'post_title' => 'Ambientes',
@@ -1023,6 +1026,10 @@ class Acervo_Emak
             );
             wp_insert_post($pag_ambientes);
         }
+
+        /**
+         * Cria página Classificações
+         */
         if (!$this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
             $pag_classificacoes = array(
                 'post_title' => 'Classificações',
@@ -1033,6 +1040,10 @@ class Acervo_Emak
             );
             wp_insert_post($pag_classificacoes);
         }
+
+        /**
+         * Cria páginas Núcleos
+         */
         if (!$this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
             $pag_nucleos = array(
                 'post_title' => 'Núcleos',
@@ -1043,6 +1054,10 @@ class Acervo_Emak
             );
             wp_insert_post($pag_nucleos);
         }
+
+        /**
+         * Cria página Ema-Klabin
+         */
         if (!$this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
             $pag_emaklabin = array(
                 'post_title' => 'Ema Klabin',
@@ -1054,17 +1069,25 @@ class Acervo_Emak
             wp_insert_post($pag_emaklabin);
         }
 
-        $editor = get_role('editor');
-        $admin = get_role('administrator');
-        $editor->add_cap('wiki_ema_capabilities');
-        $admin->add_cap('wiki_ema_capabilities');
-
-        self::wiki_ema_register_post_type();
-        self::wiki_ema_register_taxonomies();
-
+        /**
+         * Cria página Wiki-Ema, para gerar home-page da Wiki
+         */
+        if (!$this->wiki_ema_the_slug_exists('wiki-ema', 'page')) {
+            $pag_wikiema = array(
+                'post_title' => 'Wiki-Ema',
+                'post_content' => '',
+                'post_status' => 'publish',
+                'post_author' => $current_user->ID,
+                'post_type' => 'page'
+            );
+            wp_insert_post($pag_wikiema);
+        }
     }
 
-    public function wiki_ema_deactivation()
+    /**
+     * Deleta Páginas na desativação do plugin
+     */
+    public function wiki_ema_deleta_paginas()
     {
         if ($this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
             $pag_ambientes_rmv = get_page_by_path('ambientes', 'OBJECT', 'wiki_ema');
@@ -1082,11 +1105,88 @@ class Acervo_Emak
             $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_emaklabin_rmv->ID, true);
         }
+        if ($this->wiki_ema_the_slug_exists('wiki-ema', 'page')) {
+            $pag_wikiema_rmv = get_page_by_path('wiki-ema', 'OBJECT', 'page');
+            wp_delete_post($pag_wikiema_rmv->ID, true);
+        }
+    }
 
+    /**
+     * Registra novas capacidades aos usuários
+     *
+     * editor e administrador
+     *
+     * @return void
+     */
+    public function wiki_ema_registra_capacidades()
+    {
+        $editor = get_role('editor');
+        $admin = get_role('administrator');
+        $editor->add_cap('wiki_ema_capabilities');
+        $admin->add_cap('wiki_ema_capabilities');
+    }
+
+    /**
+     * Deleta as capacidades dos usuários
+     * 
+     * editor e administrador
+     *
+     * @return void
+     */
+    public function wiki_ema_deleta_capacidades()
+    {
         $editor = get_role('editor');
         $admin = get_role('administrator');
         $editor->remove_cap('wiki_ema_capabilities');
         $admin->remove_cap('wiki_ema_capabilities');
+    }
+
+    /**
+     * Função chamada na ativação do plugin
+     *
+     * @return void
+     */
+    public function wiki_ema_activacao()
+    {
+        /**
+         * Função para Criar Páginas na ativação do plugin
+         */
+        self::wiki_ema_cria_paginas();
+
+        /**
+         * Função para registrar as capacidades nos usuários
+         */
+        self::wiki_ema_registra_capacidades();
+
+        /**
+         * Função para registrar os CPTs
+         */
+        self::wiki_ema_register_post_type();
+
+        /**
+         * Função para registrar as taxonomias
+         */
+        self::wiki_ema_register_taxonomies();
+
+    }
+
+    /**
+     * Função chamada na desativação do plugin
+     *
+     * @return void
+     */
+    public function wiki_ema_desativacao()
+    {
+
+        /**
+         * Função para Deleta Páginas na desativação do plugin
+         */
+        self::wiki_ema_deleta_paginas();
+
+        /**
+         * Função para deletar capacidades dos usuários na desativação do plugin
+         */
+        self::wiki_ema_deleta_capacidades();
 
         /**
          * rewrite
@@ -1099,5 +1199,3 @@ class Acervo_Emak
  * instancias
  */
 Acervo_Emak::getInstance();
-//register_activation_hook(__FILE__, 'Acervo_Emak::activate');
-//register_deactivation_hook(__FILE__, 'flush_rewrite_rules');

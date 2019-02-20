@@ -1,7 +1,7 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.16`
+versão `0.17`
 
 # Changelog
 
@@ -11,14 +11,18 @@ versão `0.16`
 
 ## `0.16` []
 ### added: 
-- função que cria automaticamente as páginas especiais na ativação do plugin 
-- função que deleta automaticamente as páginas especiais na desativação do plugin
-> @source https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
+- função que executa ações na ativação do plugin 
+- função que executa ações na desativação do plugin
+> @see https://github.com/hgodinho/wiki-ema/issues/4#issue-408596258
 
 ### changed:
 - wp_wiki_obras_sortable_columns
 - wp_wiki_custom_columns
 - wp_wiki_obras_columns
+- melhoria na organização do código
+
+### removed:
+
 
 ***
 ## `0.15` [2019-02-10]
