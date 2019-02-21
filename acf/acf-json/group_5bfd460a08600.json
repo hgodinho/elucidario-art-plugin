@@ -155,8 +155,8 @@
         {
             "key": "field_5c60dde9f7c06",
             "label": "Obra do Mês",
-            "name": "obra_do_mes",
-            "type": "checkbox",
+            "name": "obra_domes",
+            "type": "true_false",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -165,15 +165,11 @@
                 "class": "",
                 "id": ""
             },
-            "choices": {
-                "sim": "sim"
-            },
-            "allow_custom": 0,
-            "default_value": [],
-            "layout": "vertical",
-            "toggle": 0,
-            "return_format": "value",
-            "save_custom": 0
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -193,5 +189,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1549852188
+    "modified": 1550691590
 }
