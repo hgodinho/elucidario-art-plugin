@@ -92,7 +92,7 @@ class Acervo_Emak
          */
         add_filter('acf/settings/path', array($this, 'wiki_ema_acf_settings_path'));
         //add_filter('acf/settings/dir', array($this, 'wiki_ema_acf_settings_dir'));
-        add_filter('acf/settings/show_admin', '__return_false');
+        //add_filter('acf/settings/show_admin', '__return_false');
         add_filter('acf/settings/save_json', array($this, 'wiki_ema_acf_json_save_point'));
         add_filter('acf/settings/load_json', array($this, 'wiki_ema_acf_json_load_point'));
 
@@ -656,7 +656,7 @@ class Acervo_Emak
         add_submenu_page($menu_slug, 'Classificação', 'Classificações', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
         add_submenu_page($menu_slug, 'Núcleo', 'Núcleos', 'manage_categories', 'edit-tags.php?taxonomy=nucleo&post_type=obras');
         add_submenu_page($menu_slug, 'Ambiente', 'Ambientes', 'manage_categories', 'edit-tags.php?taxonomy=ambiente&post_type=obras');
-        
+
     }
 
     /**
@@ -732,16 +732,53 @@ class Acervo_Emak
             );
             $obras_update = new WP_Query($args);
             //print_r($obras_update);
-            echo '<ol>';
+
             while ($obras_update->have_posts()): $obras_update->the_post();
-                $tombo = get_field('ficha_tecnica_tombo');
+                echo '<ol>';
+
                 $obra_id = get_the_ID();
-                echo '<li>id: ' . $obra_id . '   tombo: ' . $tombo . '</li>';
+                $tombo_in = get_field('ficha_tecnica_tombo');
+                $tombo = get_field_object('field_5bfd4663b4645');
+                $tombo_key = $tombo['key'];
+                //var_dump($tombo_key);
+
+                $origem_in = get_field('ficha_tecnica_origem');
+                $origem = get_field_object('field_5bfd46adb4646');
+                $origem_key = $origem['key'];
+                //var_dump($origem_key);
+
+                $dataperiodo_in = get_field('ficha_tecnica_dataperiodo');
+                $dataperiodo = get_field_object('field_5bfd46cab4647');
+                $dataperiodo_key = $dataperiodo['key'];
+                //var_dump($dataperiodo);
+
+                $material_in = get_field('ficha_tecnica_material');
+                $material = get_field_object('field_5bfd46fcb4648');
+                $material_key = $material['key'];
+                //var_dump($material_key);
+
+                $dimensoes_in = get_field('ficha_tecnica_dimensoes');
+                $dimensoes = get_field_object('field_5bfd47ebb4649');
+                $dimensoes_key = $dimensoes['key'];
+                //var_dump($dimensoes_key);
+
+                $fotografo_in = get_field('fotografo');
+                $fotografo = get_field_object('field_5c0ec52b96602');
+                $fotografo_key = $fotografo['key'];
+                //var_dump($fotografo_key);
+
+                $descricao_in = get_field('descricao');
+                $descricao = get_field_object('field_5bfdeeb084777');
+                $descricao_key = $descricao['key'];
+                //var_dump($descricao_key);
+                update_field($tombo_key, $tombo_in, $obra_id);
+                echo '<li>id: ' . $obra_id . ' -> ' . $tombo['value'] . ' = ' . $tombo_in . '</li>';
                 //update_field('ficha_tecnica_tombo', $tombo, $obra_id);
-                wp_update_post(array('ID' => $obra_id), true);
+                //wp_update_post(array('ID' => $obra_id), true);
+                echo '</ol>';
             endwhile;
-            echo '</ol>';
-            wp_die();
+
+            wp_die('concluído');
         } else {
             wp_die('Você não tem permissão para executar essa função.');
 
@@ -1078,7 +1115,7 @@ class Acervo_Emak
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type' => 'page'
+                'post_type' => 'page',
             );
             wp_insert_post($pag_wikiema);
         }
@@ -1128,7 +1165,7 @@ class Acervo_Emak
 
     /**
      * Deleta as capacidades dos usuários
-     * 
+     *
      * editor e administrador
      *
      * @return void
