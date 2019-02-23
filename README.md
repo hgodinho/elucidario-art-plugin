@@ -8,8 +8,13 @@ versão `0.17`
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
+## `0.17` 
+### changed
+- wiki_ema_atualiza_todos_cpts() @source https://github.com/hgodinho/wiki-ema/issues/6#issue-408610122
 
-## `0.16` []
+
+***
+## `0.16`
 ### added: 
 - função que executa ações na ativação do plugin 
 - função que executa ações na desativação do plugin

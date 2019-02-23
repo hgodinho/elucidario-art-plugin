@@ -728,53 +728,77 @@ class Acervo_Emak
         if (current_user_can('wiki_ema_capabilities')) {
             $args = array(
                 'post_type' => 'obras',
-                'posts_per_page' => 10,
+                'posts_per_page' => -1,
             );
             $obras_update = new WP_Query($args);
-            //print_r($obras_update);
 
             while ($obras_update->have_posts()): $obras_update->the_post();
-                echo '<ol>';
 
                 $obra_id = get_the_ID();
+                echo '<h3>' . $obra_id . '</h3>';
+                echo '<ol>';
+
                 $tombo_in = get_field('ficha_tecnica_tombo');
                 $tombo = get_field_object('field_5bfd4663b4645');
                 $tombo_key = $tombo['key'];
+                $tombo_value = $tombo['value'];
                 //var_dump($tombo_key);
 
                 $origem_in = get_field('ficha_tecnica_origem');
                 $origem = get_field_object('field_5bfd46adb4646');
                 $origem_key = $origem['key'];
+                $origem_value = $origem['value'];
                 //var_dump($origem_key);
 
                 $dataperiodo_in = get_field('ficha_tecnica_dataperiodo');
                 $dataperiodo = get_field_object('field_5bfd46cab4647');
                 $dataperiodo_key = $dataperiodo['key'];
+                $dataperiodo_value = $dataperiodo['value'];
                 //var_dump($dataperiodo);
 
                 $material_in = get_field('ficha_tecnica_material');
                 $material = get_field_object('field_5bfd46fcb4648');
                 $material_key = $material['key'];
+                $material_value = $material['value'];
                 //var_dump($material_key);
 
                 $dimensoes_in = get_field('ficha_tecnica_dimensoes');
                 $dimensoes = get_field_object('field_5bfd47ebb4649');
                 $dimensoes_key = $dimensoes['key'];
+                $dimensoes_value = $dimensoes['value'];
                 //var_dump($dimensoes_key);
 
                 $fotografo_in = get_field('fotografo');
                 $fotografo = get_field_object('field_5c0ec52b96602');
                 $fotografo_key = $fotografo['key'];
+                $fotografo_value = $fotografo['value'];
                 //var_dump($fotografo_key);
 
                 $descricao_in = get_field('descricao');
                 $descricao = get_field_object('field_5bfdeeb084777');
                 $descricao_key = $descricao['key'];
+                $descricao_value = $descricao['value'];
                 //var_dump($descricao_key);
-                update_field($tombo_key, $tombo_in, $obra_id);
-                echo '<li>id: ' . $obra_id . ' -> ' . $tombo['value'] . ' = ' . $tombo_in . '</li>';
-                //update_field('ficha_tecnica_tombo', $tombo, $obra_id);
+
+                if ($tombo_in != $tombo_value): update_field($tombo_key, $tombo_in);
+                elseif ($origem_in != $origem_value): update_field($origem_key, $origem_in);
+                elseif ($dataperiodo_in != $dataperiodo_value): update_field($dataperiodo_key, $dataperiodo_in);
+                elseif ($material_in != $material_value): update_field($material_key, $material_in);
+                elseif ($dimensoes_in != $dimensoes_value): update_field($dimensoes_key, $dimensoes_in);
+                elseif ($fotografo_in != $fotografo_value): update_field($fotografo_key, $fotografo_in);
+                elseif ($descricao_in != $descricao_value): update_field($descricao_key, $descricao_in);
+                endif;
+
                 //wp_update_post(array('ID' => $obra_id), true);
+
+                echo '<li>id: ' . $obra_id . ' -> ' . $tombo['value'] . ' = ' . $tombo_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $origem['value'] . ' = ' . $origem_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $dataperiodo['value'] . ' = ' . $dataperiodo_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $material['value'] . ' = ' . $material_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $dimensoes['value'] . ' = ' . $dimensoes_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $fotografo['value'] . ' = ' . $fotografo_in . '</li>';
+                echo '<li>id: ' . $obra_id . ' -> ' . $descricao['value'] . ' = ' . $descricao_in . '</li>';
+
                 echo '</ol>';
             endwhile;
 
