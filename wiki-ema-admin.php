@@ -93,9 +93,6 @@ echo '<strong>Em revisão:</strong> ' . $total_autores->draft . '.';
                 ir manualmente em cada post dos cpts criados para atualizar para poder
                 visualizar no template.
             </p>
-            <ol>
-                <li>@todo essa função não está funcionando</li>
-            </ol>
             <form id="wiki-ema-update-form-admin" method="POST">
                 <div>
                     <input type="submit" id="update_button" name="wiki-ema-update" class="button-primary" value="Atualiza todas as Obras e Autores">
