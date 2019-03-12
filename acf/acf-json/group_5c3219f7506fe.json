@@ -1,7 +1,26 @@
 {
     "key": "group_5c3219f7506fe",
-    "title": "Imagens Ambiente",
+    "title": "Ambiente",
     "fields": [
+        {
+            "key": "field_5c881ef0cf177",
+            "label": "Trecho Descrição",
+            "name": "trecho_descricao",
+            "type": "text",
+            "instructions": "Até 280 caracteres",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": 280
+        },
         {
             "key": "field_5c321a0954297",
             "label": "imagem-1",
@@ -92,5 +111,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1546791318
+    "modified": 1552424124
 }

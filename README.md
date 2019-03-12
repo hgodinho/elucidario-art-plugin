@@ -1,19 +1,23 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.17`
+versão `0.18`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
+
+## `0.18`
+### added
+- Campo "Trecho Descrição" com 280 caracteres para uma breve descrição dos ambientes
+
+***
 ## `0.17` 
 ### changed
 - wiki_ema_atualiza_todos_cpts() @source https://github.com/hgodinho/wiki-ema/issues/6#issue-408610122
 
-
-***
 ## `0.16`
 ### added: 
 - função que executa ações na ativação do plugin 
