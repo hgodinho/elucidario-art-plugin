@@ -1,13 +1,17 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.18`
+versão `0.19`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
+
+## `0.19`
+### Added
+- 2 plugins adicionados às exigencias de plugin para melhoria do sistema de busca: [Relevanssi](https://br.wordpress.org/plugins/relevanssi/) e [ACF: Better Search](https://br.wordpress.org/plugins/acf-better-search/)
 
 ## `0.18`
 ### added

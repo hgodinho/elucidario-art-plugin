@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name:  Acervo Ema Klabin
-Plugin URI:   https://emaklabin.org.br/acervo
+Plugin Name:  Wiki-Ema
+Plugin URI:   https://emaklabin.org.br/wiki-ema
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.17
+Version:      0.19
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -157,13 +157,13 @@ class Acervo_Emak
             ),
 
             /** Plugins recomendados para importação dos dados @since 0.15 */
-            /*             array(
+            array(
             'name' => 'Really Simple CSV Importer',
             'slug' => 'really-simple-csv-importer',
             'required' => false,
             'force_activation' => false,
             'dismissable' => true,
-            ), */
+            ),
             array(
                 'name' => 'WP Taxonomy Import',
                 'slug' => 'wp-taxonomy-import',
@@ -202,6 +202,22 @@ class Acervo_Emak
                 'required' => false,
                 'force_activation' => false,
                 'dismissable' => true,
+            ),
+
+            /** Plugin exigidos para a busca */
+            array(
+                'name' => 'Relevanssi – A Better Search',
+                'slug' => 'relevanssi',
+                'required' => true,
+                'force_activation' => true,
+                'dismissable' => false,
+            ),
+            array(
+                'name' => 'ACF: Better Search',
+                'slug' => 'acf-better-search',
+                'required' => true,
+                'force_activation' => true,
+                'dismissable' => false,
             ),
         );
 
