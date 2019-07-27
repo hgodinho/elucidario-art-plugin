@@ -1,13 +1,16 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.19`
+versão `0.20`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
+## `0.20`
+- https://github.com/hgodinho/wiki-ema/issues/9
+- 
 
 ## `0.19`
 ### Added

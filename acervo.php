@@ -3,7 +3,7 @@
 Plugin Name:  Wiki-Ema
 Plugin URI:   https://emaklabin.org.br/wiki-ema
 Description:  Visualização do Acervo Ema Klabin
-Version:      0.19
+Version:      0.20
 Author:       hgodinho
 Author URI:   https://hgodinho.com/
 Text Domain:  acervo-emak
@@ -158,11 +158,11 @@ class Acervo_Emak
 
             /** Plugins recomendados para importação dos dados @since 0.15 */
             array(
-            'name' => 'Really Simple CSV Importer',
-            'slug' => 'really-simple-csv-importer',
-            'required' => false,
-            'force_activation' => false,
-            'dismissable' => true,
+                'name' => 'Really Simple CSV Importer',
+                'slug' => 'really-simple-csv-importer',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
             ),
             array(
                 'name' => 'WP Taxonomy Import',
@@ -742,81 +742,142 @@ class Acervo_Emak
             wp_die('Sem autorização');
         }
         if (current_user_can('wiki_ema_capabilities')) {
-            $args = array(
+            $obrasargs = array(
                 'post_type' => 'obras',
                 'posts_per_page' => -1,
             );
-            $obras_update = new WP_Query($args);
+            $obras_update = new WP_Query($obrasargs);
 
-            while ($obras_update->have_posts()): $obras_update->the_post();
+            if ($obras_update->have_posts()): echo '<h2>OBRAS:</h2>';
+                while ($obras_update->have_posts()): $obras_update->the_post();
 
-                $obra_id = get_the_ID();
-                echo '<h3>' . $obra_id . '</h3>';
-                echo '<ol>';
+                    //var_dump(get_post_meta(get_the_ID(  )));
+                    $obra_id = get_the_ID();
+                    echo the_title( '<h3>', '</h3>');
+                    echo '<ol>';
 
-                $tombo_in = get_field('ficha_tecnica_tombo');
-                $tombo = get_field_object('field_5bfd4663b4645');
-                $tombo_key = $tombo['key'];
-                $tombo_value = $tombo['value'];
-                //var_dump($tombo_key);
+                    $tombo_in = get_field('ficha_tecnica_tombo');
+                    $tombo = get_field_object('field_5bfd4663b4645');
+                    $tombo_key = $tombo['key'];
+                    $tombo_value = $tombo['value'];
+                    //var_dump($tombo_key);
 
-                $origem_in = get_field('ficha_tecnica_origem');
-                $origem = get_field_object('field_5bfd46adb4646');
-                $origem_key = $origem['key'];
-                $origem_value = $origem['value'];
-                //var_dump($origem_key);
+                    $origem_in = get_field('ficha_tecnica_origem');
+                    $origem = get_field_object('field_5bfd46adb4646');
+                    $origem_key = $origem['key'];
+                    $origem_value = $origem['value'];
+                    //var_dump($origem_key);
 
-                $dataperiodo_in = get_field('ficha_tecnica_dataperiodo');
-                $dataperiodo = get_field_object('field_5bfd46cab4647');
-                $dataperiodo_key = $dataperiodo['key'];
-                $dataperiodo_value = $dataperiodo['value'];
-                //var_dump($dataperiodo);
+                    $dataperiodo_in = get_field('ficha_tecnica_dataperiodo');
+                    $dataperiodo = get_field_object('field_5bfd46cab4647');
+                    $dataperiodo_key = $dataperiodo['key'];
+                    $dataperiodo_value = $dataperiodo['value'];
+                    //var_dump($dataperiodo);
 
-                $material_in = get_field('ficha_tecnica_material');
-                $material = get_field_object('field_5bfd46fcb4648');
-                $material_key = $material['key'];
-                $material_value = $material['value'];
-                //var_dump($material_key);
+                    $material_in = get_field('ficha_tecnica_material');
+                    $material = get_field_object('field_5bfd46fcb4648');
+                    $material_key = $material['key'];
+                    $material_value = $material['value'];
+                    //var_dump($material_key);
 
-                $dimensoes_in = get_field('ficha_tecnica_dimensoes');
-                $dimensoes = get_field_object('field_5bfd47ebb4649');
-                $dimensoes_key = $dimensoes['key'];
-                $dimensoes_value = $dimensoes['value'];
-                //var_dump($dimensoes_key);
+                    $dimensoes_in = get_field('ficha_tecnica_dimensoes');
+                    $dimensoes = get_field_object('field_5bfd47ebb4649');
+                    $dimensoes_key = $dimensoes['key'];
+                    $dimensoes_value = $dimensoes['value'];
+                    //var_dump($dimensoes_key);
 
-                $fotografo_in = get_field('fotografo');
-                $fotografo = get_field_object('field_5c0ec52b96602');
-                $fotografo_key = $fotografo['key'];
-                $fotografo_value = $fotografo['value'];
-                //var_dump($fotografo_key);
+                    $fotografo_in = get_field('fotografo');
+                    $fotografo = get_field_object('field_5c0ec52b96602');
+                    $fotografo_key = $fotografo['key'];
+                    $fotografo_value = $fotografo['value'];
+                    //var_dump($fotografo_key);
 
-                $descricao_in = get_field('descricao');
-                $descricao = get_field_object('field_5bfdeeb084777');
-                $descricao_key = $descricao['key'];
-                $descricao_value = $descricao['value'];
-                //var_dump($descricao_key);
+                    $descricao_in = get_field('descricao');
+                    $descricao = get_field_object('field_5bfdeeb084777');
+                    $descricao_key = $descricao['key'];
+                    $descricao_value = $descricao['value'];
+                    //var_dump($descricao_key);
 
-                if ($tombo_in != $tombo_value): update_field($tombo_key, $tombo_in);
-                elseif ($origem_in != $origem_value): update_field($origem_key, $origem_in);
-                elseif ($dataperiodo_in != $dataperiodo_value): update_field($dataperiodo_key, $dataperiodo_in);
-                elseif ($material_in != $material_value): update_field($material_key, $material_in);
-                elseif ($dimensoes_in != $dimensoes_value): update_field($dimensoes_key, $dimensoes_in);
-                elseif ($fotografo_in != $fotografo_value): update_field($fotografo_key, $fotografo_in);
-                elseif ($descricao_in != $descricao_value): update_field($descricao_key, $descricao_in);
-                endif;
+                    if ($tombo_in != $tombo_value): update_field($tombo_key, $tombo_in);
+                    elseif ($origem_in != $origem_value): update_field($origem_key, $origem_in);
+                    elseif ($dataperiodo_in != $dataperiodo_value): update_field($dataperiodo_key, $dataperiodo_in);
+                    elseif ($material_in != $material_value): update_field($material_key, $material_in);
+                    elseif ($dimensoes_in != $dimensoes_value): update_field($dimensoes_key, $dimensoes_in);
+                    elseif ($fotografo_in != $fotografo_value): update_field($fotografo_key, $fotografo_in);
+                    elseif ($descricao_in != $descricao_value): update_field($descricao_key, $descricao_in);
+                    endif;
 
-                //wp_update_post(array('ID' => $obra_id), true);
+                    //wp_update_post(array('ID' => $obra_id), true);
 
-                echo '<li>id: ' . $obra_id . ' -> ' . $tombo['value'] . ' = ' . $tombo_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $origem['value'] . ' = ' . $origem_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $dataperiodo['value'] . ' = ' . $dataperiodo_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $material['value'] . ' = ' . $material_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $dimensoes['value'] . ' = ' . $dimensoes_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $fotografo['value'] . ' = ' . $fotografo_in . '</li>';
-                echo '<li>id: ' . $obra_id . ' -> ' . $descricao['value'] . ' = ' . $descricao_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $tombo['value'] . ' = ' . $tombo_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $origem['value'] . ' = ' . $origem_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $dataperiodo['value'] . ' = ' . $dataperiodo_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $material['value'] . ' = ' . $material_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $dimensoes['value'] . ' = ' . $dimensoes_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $fotografo['value'] . ' = ' . $fotografo_in . '</li>';
+                    echo '<li>id: ' . $obra_id . ' -> ' . $descricao['value'] . ' = ' . $descricao_in . '</li>';
 
-                echo '</ol>';
-            endwhile;
+                    echo '</ol>';
+
+                endwhile;
+            endif;
+
+            wp_reset_query();
+
+            $autoresargs = array(
+                'post_type' => 'autores',
+                'posts_per_page' => -1,
+            );
+            $autores_update = new WP_Query($autoresargs);
+
+            if ($autores_update->have_posts()): echo '<h2>AUTORES:</h2>';
+                while ($autores_update->have_posts()): $autores_update->the_post();
+                    
+                    $autor_id = get_the_ID();
+                    echo the_title( '<h3>', '</h3>');
+                    echo '<ol>'; 
+
+                    $datainicio_in = get_field('dataperiodo_inicial');
+                    $datainicio = get_field_object('field_5bfdfe04be13f');
+                    $datainicio_key = $datainicio['key'];
+                    $datainicio_value = $datainicio['value'];
+                    //var_dump($datainicio_value);
+
+                    $datafinal_in = get_field('dataperiodo_final');
+                    $datafinal = get_field_object('field_5bfdfe43be140');
+                    $datafinal_key = $datafinal['key'];
+                    $datafinal_value = $datafinal['value'];
+                    //var_dump($datafinal);
+
+                    $descricao_in = get_field('descricao');
+                    $descricao = get_field_object('field_5bfdfe72be142');
+                    $descricao_key = $descricao['key'];
+                    $descricao_value = $descricao['value'];
+                    //var_dump($descricao);
+
+                    if ($datainicio_in != $datainicio_value): update_field($datainicio_key, $datainicio_in);
+                    elseif ($datafinal_in != $datafinal_value): update_field($datafinal_key, $datafinal_in);
+                    elseif ($descricao_in != $descricao_value): update_field($descricao_key, $descricao_in);
+                    endif;
+
+                    wp_update_post(array('ID' => $autor_id), true);
+
+                    if (is_wp_error($autor_id)) {
+                        $errors = $autor_id->get_error_messages();
+                        foreach ($errors as $error) {
+                            echo $error;
+                        }
+                    }
+
+                    echo '<li>id: ' . $autor_id . ' -> ' . $datainicio['value'] . ' = ' . $datainicio_in . '</li>';
+                    echo '<li>id: ' . $autor_id . ' -> ' . $datafinal['value'] . ' = ' . $datafinal_in . '</li>';
+                    echo '<li>id: ' . $autor_id . ' -> ' . $descricao['value'] . ' = ' . $descricao_in . '</li>';
+
+                    echo '</ol>';
+                endwhile;
+            endif;
+
+            wp_reset_query();
 
             wp_die('concluído');
         } else {
@@ -1190,7 +1251,6 @@ class Acervo_Emak
 
     /**
      * Registra novas capacidades aos usuários
-     *
      * editor e administrador
      *
      * @return void
