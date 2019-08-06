@@ -21,7 +21,7 @@ require_once dirname(__FILE__) . '/acf/acf.php';
  * Constantes
  */
 const PLUGIN_NAME = "Wiki-Ema";
-const PLUGIN_SLUG = "wiki-ema";
+//const PLUGIN_SLUG = "wiki-ema";
 const TEXT_DOMAIN = "acervo-emak";
 
 /**
@@ -341,7 +341,8 @@ class Acervo_Emak
                 'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
-                    'slug' => PLUGIN_SLUG . '/pag',
+                    //'slug' => PLUGIN_SLUG . '/pag',
+                    'slug' => '/pag',
                     'with_front' => true,
                 ),
             )
@@ -384,12 +385,9 @@ class Acervo_Emak
                 'description' => 'Post para cadastro de obras',
                 'supports' => array(
                     'title',
-                    //'editor',
-                    //'excerpt',
                     'author',
                     'revisions',
                     'thumbnail',
-                    //'custom-fields',
                     'comments',
                 ),
                 'public' => true,
@@ -397,7 +395,8 @@ class Acervo_Emak
                 'show_in_menu' => false,
                 'has_archive' => true,
                 'rewrite' => array(
-                    'slug' => PLUGIN_SLUG . '/obras',
+                    //'slug' => PLUGIN_SLUG . '/obras',
+                    'slug' => '/obras',
                     'with_front' => true,
                 ),
             )
@@ -451,7 +450,8 @@ class Acervo_Emak
                 'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
-                    'slug' => PLUGIN_SLUG . '/autor',
+                    //'slug' => PLUGIN_SLUG . '/autor',
+                    'slug' => '/autores',
                     'with_front' => false,
                     'pages' => true,
                 ),
@@ -567,7 +567,8 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => PLUGIN_SLUG . '/classificacao'),
+                //'rewrite' => array('slug' => PLUGIN_SLUG . '/classificacao'),
+                'rewrite' => array('slug' => '/classificacao'),
             )
         );
         register_taxonomy_for_object_type('classificacao', 'obras');
@@ -600,7 +601,8 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => PLUGIN_SLUG . '/nucleo'),
+                //'rewrite' => array('slug' => PLUGIN_SLUG . '/nucleo'),
+                'rewrite' => array('slug' => '/nucleo'),
             )
         );
         register_taxonomy_for_object_type('nucleo', 'obras');
@@ -633,7 +635,8 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                'rewrite' => array('slug' => PLUGIN_SLUG . '/ambiente'),
+                //'rewrite' => array('slug' => PLUGIN_SLUG . '/ambiente'),
+                'rewrite' => array('slug' => '/ambiente'),
             )
         );
         register_taxonomy_for_object_type('ambiente', 'obras');
@@ -1304,7 +1307,8 @@ class Acervo_Emak
          * Função para registrar as taxonomias
          */
         self::wiki_ema_register_taxonomies();
-
+        
+        flush_rewrite_rules();
     }
 
     /**
