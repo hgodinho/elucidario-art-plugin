@@ -342,7 +342,7 @@ class Acervo_Emak
                 'hierarchical' => true,
                 'rewrite' => array(
                     //'slug' => PLUGIN_SLUG . '/pag',
-                    'slug' => '/pag',
+                    'slug' => 'pag',
                     'with_front' => true,
                 ),
             )
@@ -396,7 +396,7 @@ class Acervo_Emak
                 'has_archive' => true,
                 'rewrite' => array(
                     //'slug' => PLUGIN_SLUG . '/obras',
-                    'slug' => '/obras',
+                    'slug' => 'obras',
                     'with_front' => true,
                 ),
             )
@@ -451,7 +451,7 @@ class Acervo_Emak
                 'hierarchical' => true,
                 'rewrite' => array(
                     //'slug' => PLUGIN_SLUG . '/autor',
-                    'slug' => '/autores',
+                    'slug' => 'autores',
                     'with_front' => false,
                     'pages' => true,
                 ),
@@ -568,7 +568,7 @@ class Acervo_Emak
                 'public' => true,
                 'hierarchical' => true,
                 //'rewrite' => array('slug' => PLUGIN_SLUG . '/classificacao'),
-                'rewrite' => array('slug' => '/classificacao'),
+                'rewrite' => array('slug' => 'classificacao'),
             )
         );
         register_taxonomy_for_object_type('classificacao', 'obras');
@@ -602,7 +602,7 @@ class Acervo_Emak
                 'public' => true,
                 'hierarchical' => true,
                 //'rewrite' => array('slug' => PLUGIN_SLUG . '/nucleo'),
-                'rewrite' => array('slug' => '/nucleo'),
+                'rewrite' => array('slug' => 'nucleo'),
             )
         );
         register_taxonomy_for_object_type('nucleo', 'obras');
@@ -636,7 +636,7 @@ class Acervo_Emak
                 'public' => true,
                 'hierarchical' => true,
                 //'rewrite' => array('slug' => PLUGIN_SLUG . '/ambiente'),
-                'rewrite' => array('slug' => '/ambiente'),
+                'rewrite' => array('slug' => 'ambiente'),
             )
         );
         register_taxonomy_for_object_type('ambiente', 'obras');

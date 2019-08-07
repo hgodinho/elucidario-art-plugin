@@ -1,12 +1,15 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.21`
+versão `0.22`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.22`
+- correção do Slug nos custom post types, após a atualização `0.21` estava gerando erro 404 no arquivo dos cpts
 
 ## `0.21`
 - remoção do `PLUGIN_SLUG` do tema. Isso foi uma mudança estratégica ao perceber que a instalação da Wiki utilizando o plugin Multiple Themes geraria um monte de problemas de dificil solução, e que também, poluiria o banco de dados do Site com todas as informações do acervo que seriam acrescentadas na importação. Essa mudança estratégica é importante, pois faz com que a instalação da Wiki seja independente do site, uma nova instalação wordpress no servidor bluehost.  
