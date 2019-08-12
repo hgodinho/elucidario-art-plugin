@@ -1,12 +1,15 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.22`
+versão `0.23`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.23`
+- atualização do plugin header no `acervo.php` para compatibilidade com o plugin `GitHub Updater`
 
 ## `0.22`
 - correção do Slug nos custom post types, após a atualização `0.21` estava gerando erro 404 no arquivo dos cpts

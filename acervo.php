@@ -1,14 +1,13 @@
 <?php
-/*
-Plugin Name:  Wiki-Ema
-Plugin URI:   https://emaklabin.org.br/wiki-ema
-Description:  Visualização do Acervo Ema Klabin
-Version:      0.20
-Author:       hgodinho
-Author URI:   https://hgodinho.com/
-Text Domain:  acervo-emak
-License:      GPL2
-License URI:  https://www.gnu.org/licenses/gpl-2.0.html
+/**
+ * Plugin Name:  Wiki-Ema
+ * Plugin URI:   https://emaklabin.org.br/wiki-ema
+ * Description:  Visualização do Acervo Ema Klabin
+ * Version:      0.23
+ * Author:       hgodinho
+ * Author URI:   https://hgodinho.com/
+ * Text Domain:  acervo-emak
+ * GitHub Plugin URI: https://github.com/hgodinho/wiki-ema
  */
 
 /**
