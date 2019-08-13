@@ -3,7 +3,7 @@
  * Plugin Name:  Wiki-Ema
  * Plugin URI:   https://emaklabin.org.br/wiki-ema
  * Description:  Visualização do Acervo Ema Klabin
- * Version:      0.23
+ * Version:      0.24
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  acervo-emak
@@ -1207,20 +1207,6 @@ class Acervo_Emak
                 'post_type' => 'wiki_ema',
             );
             wp_insert_post($pag_emaklabin);
-        }
-
-        /**
-         * Cria página Wiki-Ema, para gerar home-page da Wiki
-         */
-        if (!$this->wiki_ema_the_slug_exists('wiki-ema', 'page')) {
-            $pag_wikiema = array(
-                'post_title' => 'Wiki-Ema',
-                'post_content' => '',
-                'post_status' => 'publish',
-                'post_author' => $current_user->ID,
-                'post_type' => 'page',
-            );
-            wp_insert_post($pag_wikiema);
         }
     }
 
