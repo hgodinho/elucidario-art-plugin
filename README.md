@@ -1,7 +1,7 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.25`
+versão `0.26`
 
 # Changelog
 
