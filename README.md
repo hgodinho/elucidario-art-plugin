@@ -1,12 +1,15 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.24`
+versão `0.25`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.25`
+- ver `0.24`.
 
 ## `0.24`
 - Remoção da função que criava a página Wiki-Ema na ativação, função não necessário após atualização `0.21`

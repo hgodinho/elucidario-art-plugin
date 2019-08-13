@@ -3,7 +3,7 @@
  * Plugin Name:  Wiki-Ema
  * Plugin URI:   https://emaklabin.org.br/wiki-ema
  * Description:  Visualização do Acervo Ema Klabin
- * Version:      0.24
+ * Version:      0.25
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  acervo-emak
@@ -1157,6 +1157,7 @@ class Acervo_Emak
          * Cria página Ambientes
          */
         if (!$this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
+            echo 'criando nova página.';
             $pag_ambientes = array(
                 'post_title' => 'Ambientes',
                 'post_content' => '',
@@ -1171,6 +1172,7 @@ class Acervo_Emak
          * Cria página Classificações
          */
         if (!$this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
+            echo 'criando nova página.';
             $pag_classificacoes = array(
                 'post_title' => 'Classificações',
                 'post_content' => '',
@@ -1185,6 +1187,7 @@ class Acervo_Emak
          * Cria páginas Núcleos
          */
         if (!$this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
+            echo 'criando nova página.';
             $pag_nucleos = array(
                 'post_title' => 'Núcleos',
                 'post_content' => '',
@@ -1199,6 +1202,7 @@ class Acervo_Emak
          * Cria página Ema-Klabin
          */
         if (!$this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
+            echo 'criando nova página.';
             $pag_emaklabin = array(
                 'post_title' => 'Ema Klabin',
                 'post_content' => '',
@@ -1230,10 +1234,6 @@ class Acervo_Emak
         if ($this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
             $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'wiki_ema');
             wp_delete_post($pag_emaklabin_rmv->ID, true);
-        }
-        if ($this->wiki_ema_the_slug_exists('wiki-ema', 'page')) {
-            $pag_wikiema_rmv = get_page_by_path('wiki-ema', 'OBJECT', 'page');
-            wp_delete_post($pag_wikiema_rmv->ID, true);
         }
     }
 
