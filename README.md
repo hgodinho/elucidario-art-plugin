@@ -1,12 +1,16 @@
 # Acervo
 
 visualização do acervo Ema Klabin
-versão `0.26`
+versão `0.27`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.27`
+- const PLUGIN_NAME e PLUGIN_URI adicionadas
+- All in One WP Migration adicionado como plugin sugerido.
 
 ## `0.25`
 - ver `0.24`.

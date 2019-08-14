@@ -12,7 +12,7 @@ global $wiki_ema_admin;
 ?>
 
 <div class="wrap">
-    <h2>Wiki-Ema</h2>
+    <h2><?php echo PLUGIN_NAME; ?></h2>
     <div class="grid-container">
         <div class="grid-header">
             <h3 class="header">Status</h3>

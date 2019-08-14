@@ -3,7 +3,7 @@
  * Plugin Name:  Wiki-Ema
  * Plugin URI:   https://emaklabin.org.br/wiki-ema
  * Description:  Visualização do Acervo Ema Klabin
- * Version:      0.26
+ * Version:      0.27
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  acervo-emak
@@ -19,8 +19,9 @@ require_once dirname(__FILE__) . '/acf/acf.php';
 /**
  * Constantes
  */
+const PLUGIN_VERSION = "0.27";
 const PLUGIN_NAME = "Wiki-Ema";
-//const PLUGIN_SLUG = "wiki-ema";
+const PLUGIN_URI = "wiki-ema";
 const TEXT_DOMAIN = "acervo-emak";
 
 /**
@@ -177,6 +178,13 @@ class Acervo_Emak
                 'force_activation' => false,
                 'dismissable' => true,
             ),
+            array(
+                'name' => 'All-in-One WP Migration',
+                'slug' => 'all-in-one-wp-migration',
+                'required' => false,
+                'force_activation' => false,
+                'dismissable' => true,
+            ),
 
             /** plugins recomendados para debug @since 0.15 */
             array(
@@ -323,7 +331,7 @@ class Acervo_Emak
                     'items_list_navigation' => __('Items list navigation', 'text_domain'),
                     'filter_items_list' => __('Filter items list', 'text_domain'),
                 ),
-                'description' => 'Páginas especiais Wiki-Ema',
+                'description' => 'Páginas especiais ' . PLUGIN_NAME,
                 'supports' => array(
                     'title',
                     'editor',
@@ -332,7 +340,6 @@ class Acervo_Emak
                     'revisions',
                     'thumbnail',
                     'page-attributes',
-                    //'post-formats',
                 ),
                 'public' => true,
                 'publicly_queryable' => true,
@@ -340,7 +347,6 @@ class Acervo_Emak
                 'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
-                    //'slug' => PLUGIN_SLUG . '/pag',
                     'slug' => 'pag',
                     'with_front' => true,
                 ),
@@ -394,7 +400,6 @@ class Acervo_Emak
                 'show_in_menu' => false,
                 'has_archive' => true,
                 'rewrite' => array(
-                    //'slug' => PLUGIN_SLUG . '/obras',
                     'slug' => 'obras',
                     'with_front' => true,
                 ),
@@ -449,7 +454,6 @@ class Acervo_Emak
                 'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
-                    //'slug' => PLUGIN_SLUG . '/autor',
                     'slug' => 'autores',
                     'with_front' => false,
                     'pages' => true,
@@ -566,7 +570,6 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                //'rewrite' => array('slug' => PLUGIN_SLUG . '/classificacao'),
                 'rewrite' => array('slug' => 'classificacao'),
             )
         );
@@ -600,7 +603,6 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                //'rewrite' => array('slug' => PLUGIN_SLUG . '/nucleo'),
                 'rewrite' => array('slug' => 'nucleo'),
             )
         );
@@ -634,7 +636,6 @@ class Acervo_Emak
                 ),
                 'public' => true,
                 'hierarchical' => true,
-                //'rewrite' => array('slug' => PLUGIN_SLUG . '/ambiente'),
                 'rewrite' => array('slug' => 'ambiente'),
             )
         );
@@ -648,10 +649,10 @@ class Acervo_Emak
      */
     public static function wiki_ema_custom_menu_admin_page()
     {
-        $page_title = __('Wiki-Ema', TEXT_DOMAIN);
-        $menu_title = __('Wiki-Ema', TEXT_DOMAIN);
+        $page_title = __(PLUGIN_NAME, TEXT_DOMAIN);
+        $menu_title = __(PLUGIN_NAME, TEXT_DOMAIN);
         $capability = 'manage_options';
-        $menu_slug = 'wiki-ema' . '/wiki-ema-admin';
+        $menu_slug = PLUGIN_URI . '/wiki-ema-admin';
         $function = array($this, 'wiki_ema_template_plugin_admin');
         $dashicon = 'dashicons-admin-customizer';
         $position = 3;
