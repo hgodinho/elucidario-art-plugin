@@ -5,7 +5,7 @@
  * @since 0.13
  * @version 0.1
  */
-global $wiki_ema_admin;
+global $elucidario_art_admin;
 ?>
 
 <?php
@@ -71,9 +71,9 @@ echo '<strong>Em revisão:</strong> ' . $total_autores->draft . '.';
             <p>
                 Essa ação é necessária ao importar o banco de dados csv.
             </p>
-            <form id="wiki-ema-sync-form-admin" method="POST">
+            <form id="elucidario-art-sync-form-admin" method="POST">
                 <div>
-                    <input type="submit" id="sync_button" name="wiki-ema-sync" class="button-primary"
+                    <input type="submit" id="sync_button" name="elucidario-art-sync" class="button-primary"
                         value="Sincroniza Autores e Obras">
                     <span class="spinner" id="spinner_sync"
                         style="float:inherit !important; visibility: unset!important; display: none;"></span>
@@ -92,9 +92,9 @@ echo '<strong>Em revisão:</strong> ' . $total_autores->draft . '.';
                 ir manualmente em cada post dos cpts criados para atualizar para poder
                 visualizar no template.
             </p>
-            <form id="wiki-ema-update-form-admin" method="POST">
+            <form id="elucidario-art-update-form-admin" method="POST">
                 <div>
-                    <input type="submit" id="update_button" name="wiki-ema-update" class="button-primary"
+                    <input type="submit" id="update_button" name="elucidario-art-update" class="button-primary"
                         value="Atualiza todas as Obras e Autores">
                     <span class="spinner" id="spinner_update"
                         style="float:inherit !important; visibility: unset!important; display: none;"></span>

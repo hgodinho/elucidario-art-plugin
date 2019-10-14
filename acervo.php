@@ -1,12 +1,12 @@
 <?php
 /**
- * Plugin Name:  Wiki-Ema
- * Plugin URI:   https://emaklabin.org.br/wiki-ema
+ * Plugin Name:  Elucidário.art
+ * Plugin URI:   https://emaklabin.org.br/explore
  * Description:  Visualização do Acervo Ema Klabin
- * Version:      0.27
+ * Version:      0.28
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
- * Text Domain:  acervo-emak
+ * Text Domain:  eludidario-art-plugin
  * GitHub Plugin URI: https://github.com/hgodinho/wiki-ema
  */
 
@@ -20,9 +20,9 @@ require_once dirname(__FILE__) . '/acf/acf.php';
  * Constantes
  */
 const PLUGIN_VERSION = "0.27";
-const PLUGIN_NAME = "Wiki-Ema";
-const PLUGIN_URI = "wiki-ema";
-const TEXT_DOMAIN = "acervo-emak";
+const PLUGIN_NAME = "Elucidário.art";
+const PLUGIN_URI = "elucidario-art";
+const TEXT_DOMAIN = "eludidario-art-plugin";
 
 /**
  * Classe principal
@@ -53,36 +53,36 @@ class Acervo_Emak
          * o meta-box na ativação do plugin.
          *
          * */
-        add_action('tgmpa_register', array($this, 'wiki_ema_check_required_plugins'));
+        add_action('tgmpa_register', array($this, 'elucidario_art_check_required_plugins'));
 
         /**
          * adiciona menu item para organização no admin
          */
-        add_action('admin_menu', array($this, 'wiki_ema_custom_menu_admin_page'));
+        add_action('admin_menu', array($this, 'elucidario_art_custom_menu_admin_page'));
 
         /** adiciona as actions ds post-types e das taxonomies */
-        add_action('init', 'Acervo_Emak::wiki_ema_register_post_type');
-        add_action('init', 'Acervo_Emak::wiki_ema_register_taxonomies');
+        add_action('init', 'Acervo_Emak::elucidario_art_register_post_type');
+        add_action('init', 'Acervo_Emak::elucidario_art_register_taxonomies');
 
         /**
          * Arruma admin columns
          */
-        add_action('manage_obras_posts_custom_column', array($this, 'wiki_ema_custom_columns'));
-        add_filter('manage_edit-obras_columns', array($this, 'wiki_ema_obras_columns'));
-        add_filter('manage_edit-obras_sortable_columns', array($this, 'wiki_ema_obras_sortable_columns'));
+        add_action('manage_obras_posts_custom_column', array($this, 'elucidario_art_custom_columns'));
+        add_filter('manage_edit-obras_columns', array($this, 'elucidario_art_obras_columns'));
+        add_filter('manage_edit-obras_sortable_columns', array($this, 'elucidario_art_obras_sortable_columns'));
 
         /**
          * @version 0.8
          * filtros reativado para versão `0.8` para que seja possível clonar os campos.
          * não é possível clonar os campos no ACF sem que se tenha a versão premium ( 25 USD )
          * */
-        add_filter('rwmb_meta_boxes', array($this, 'wiki_ema_obra_metabox'));
-        add_filter('rwmb_meta_boxes', array($this, 'wiki_ema_autor_metabox'));
+        add_filter('rwmb_meta_boxes', array($this, 'elucidario_art_obra_metabox'));
+        add_filter('rwmb_meta_boxes', array($this, 'elucidario_art_autor_metabox'));
 
         /**
          * Cria relações usando meta-box
          */
-        add_action('mb_relationships_init', array($this, 'wiki_ema_cria_relacoes'));
+        add_action('mb_relationships_init', array($this, 'elucidario_art_cria_relacoes'));
 
         /**
          * Configuração do ACF
@@ -90,23 +90,23 @@ class Acervo_Emak
          * @since 0.7
          *
          */
-        add_filter('acf/settings/path', array($this, 'wiki_ema_acf_settings_path'));
-        //add_filter('acf/settings/dir', array($this, 'wiki_ema_acf_settings_dir'));
+        add_filter('acf/settings/path', array($this, 'elucidario_art_acf_settings_path'));
+        //add_filter('acf/settings/dir', array($this, 'elucidario_art_acf_settings_dir'));
         //add_filter('acf/settings/show_admin', '__return_false');
-        add_filter('acf/settings/save_json', array($this, 'wiki_ema_acf_json_save_point'));
-        add_filter('acf/settings/load_json', array($this, 'wiki_ema_acf_json_load_point'));
+        add_filter('acf/settings/save_json', array($this, 'elucidario_art_acf_json_save_point'));
+        add_filter('acf/settings/load_json', array($this, 'elucidario_art_acf_json_load_point'));
 
         /** Cria botão de editar na barra do admin */
-        add_action('wp_before_admin_bar_render', array($this, 'wiki_ema_admin_bar_link'));
+        add_action('wp_before_admin_bar_render', array($this, 'elucidario_art_admin_bar_link'));
 
-        //add_action( 'admin_post_wiki_ema_sincroniza_autor_obra', array($this,'wiki_ema_sincroniza_autor_obra' ));
-        add_action('wp_ajax_wiki_ema_sincroniza_autor_obra', array($this, 'wiki_ema_sincroniza_autor_obra'));
-        add_action('wp_ajax_wiki_ema_atualiza_todos_cpts', array($this, 'wiki_ema_atualiza_todos_cpts'));
+        //add_action( 'admin_post_elucidario_art_sincroniza_autor_obra', array($this,'elucidario_art_sincroniza_autor_obra' ));
+        add_action('wp_ajax_elucidario_art_sincroniza_autor_obra', array($this, 'elucidario_art_sincroniza_autor_obra'));
+        add_action('wp_ajax_elucidario_art_atualiza_todos_cpts', array($this, 'elucidario_art_atualiza_todos_cpts'));
 
         /**
          * enqueue dos scripts ajax do admin
          */
-        add_action('admin_enqueue_scripts', array($this, 'wiki_ema_load_scripts'));
+        add_action('admin_enqueue_scripts', array($this, 'elucidario_art_load_scripts'));
 
         /**
          * Hook para chamar função que executa ações na ativação e desativação do plugin
@@ -114,8 +114,8 @@ class Acervo_Emak
          *
          * @since 0.16
          */
-        register_activation_hook(__FILE__, array($this, 'wiki_ema_activacao'));
-        register_deactivation_hook(__FILE__, array($this, 'wiki_ema_desativacao'));
+        register_activation_hook(__FILE__, array($this, 'elucidario_art_activacao'));
+        register_deactivation_hook(__FILE__, array($this, 'elucidario_art_desativacao'));
 
         /**
          * Adiciona template
@@ -135,7 +135,7 @@ class Acervo_Emak
      *
      * *obs: função reativada para versao `0.8`
      */
-    public function wiki_ema_check_required_plugins()
+    public function elucidario_art_check_required_plugins()
     {
         /** Plugins */
         $plugins = array(
@@ -269,22 +269,22 @@ class Acervo_Emak
      *
      */
     /** 1. customize ACF path */
-    public function wiki_ema_acf_settings_path($path)
+    public function elucidario_art_acf_settings_path($path)
     {
         $path = plugin_dir_path(__FILE__) . 'acf/';
         return $path;
     }
-    public function wiki_ema_acf_settings_dir($dir)
+    public function elucidario_art_acf_settings_dir($dir)
     {
         $dir = plugin_dir_path(__FILE__) . 'acf/';
         return $dir;
     }
-    public function wiki_ema_acf_json_save_point($path)
+    public function elucidario_art_acf_json_save_point($path)
     {
         $path = plugin_dir_path(__FILE__) . 'acf/acf-json';
         return $path;
     }
-    public function wiki_ema_acf_json_load_point($paths)
+    public function elucidario_art_acf_json_load_point($paths)
     {
         unset($paths[0]);
         $paths[] = plugin_dir_path(__FILE__) . 'acf/acf-json';
@@ -296,11 +296,11 @@ class Acervo_Emak
      *
      * @return void
      */
-    public static function wiki_ema_register_post_type()
+    public static function elucidario_art_register_post_type()
     {
-        /** registra wiki-ema */
+        /** registra elucidario-art */
         register_post_type(
-            'wiki_ema',
+            'elucidario_art',
             array(
                 'labels' => array(
                     'name' => __(PLUGIN_NAME),
@@ -469,7 +469,7 @@ class Acervo_Emak
      * @param [type] $columns
      * @return void
      */
-    public static function wiki_ema_obras_columns($columns)
+    public static function elucidario_art_obras_columns($columns)
     {
         $columns = array(
             'cb' => '<input type="checkbox" />',
@@ -489,7 +489,7 @@ class Acervo_Emak
      * @param [type] $columns
      * @return void
      */
-    public static function wiki_ema_obras_sortable_columns($columns)
+    public static function elucidario_art_obras_sortable_columns($columns)
     {
         $columns = array(
             'title' => 'Título',
@@ -506,7 +506,7 @@ class Acervo_Emak
      * @param [type] $column
      * @return void
      */
-    public static function wiki_ema_custom_columns($column)
+    public static function elucidario_art_custom_columns($column)
     {
         global $post;
         if ($column == 'thumbnail') {
@@ -540,7 +540,7 @@ class Acervo_Emak
      *
      * @return void
      */
-    public static function wiki_ema_register_taxonomies()
+    public static function elucidario_art_register_taxonomies()
     {
         /** registra Classificação para Obras */
         register_taxonomy(
@@ -647,19 +647,19 @@ class Acervo_Emak
      *
      * @since 0.13
      */
-    public static function wiki_ema_custom_menu_admin_page()
+    public static function elucidario_art_custom_menu_admin_page()
     {
         $page_title = __(PLUGIN_NAME, TEXT_DOMAIN);
         $menu_title = __(PLUGIN_NAME, TEXT_DOMAIN);
         $capability = 'manage_options';
-        $menu_slug = PLUGIN_URI . '/wiki-ema-admin';
-        $function = array($this, 'wiki_ema_template_plugin_admin');
+        $menu_slug = PLUGIN_URI . '/elucidario-art-admin';
+        $function = array($this, 'elucidario_art_template_plugin_admin');
         $dashicon = 'dashicons-admin-customizer';
         $position = 3;
 
-        global $wiki_ema_admin;
+        global $elucidario_art_admin;
 
-        $wiki_ema_admin = add_menu_page(
+        $elucidario_art_admin = add_menu_page(
             $page_title,
             $menu_title,
             $capability,
@@ -669,7 +669,7 @@ class Acervo_Emak
             $position
         );
 
-        add_submenu_page($menu_slug, 'Páginas Especiais', 'Páginas especiais', 'edit_posts', 'edit.php?post_type=wiki_ema');
+        add_submenu_page($menu_slug, 'Páginas Especiais', 'Páginas especiais', 'edit_posts', 'edit.php?post_type=elucidario_art');
         add_submenu_page($menu_slug, 'Obras', 'Obras', 'edit_posts', 'edit.php?post_type=obras');
         add_submenu_page($menu_slug, 'Autores', 'Autores', 'edit_posts', 'edit.php?post_type=autores');
         add_submenu_page($menu_slug, 'Classificação', 'Classificações', 'manage_categories', 'edit-tags.php?taxonomy=classificacao&post_type=obras');
@@ -679,13 +679,13 @@ class Acervo_Emak
     }
 
     /**
-     * Chama o Wiki-Ema Admin
+     * Chama o Elucidário.art Admin
      *
      * @return void
      */
-    public static function wiki_ema_template_plugin_admin()
+    public static function elucidario_art_template_plugin_admin()
     {
-        include 'wiki-ema-admin.php';
+        include 'elucidario-art-admin.php';
     }
 
     /**
@@ -694,13 +694,13 @@ class Acervo_Emak
      * @since 0.15
      * @version 0.1
      */
-    public function wiki_ema_sincroniza_autor_obra()
+    public function elucidario_art_sincroniza_autor_obra()
     {
-        if (!isset($_POST['wiki_ema_sync_nonce']) || !wp_verify_nonce($_POST['wiki_ema_sync_nonce'], 'wiki_ema_sync_nonce')) {
+        if (!isset($_POST['elucidario_art_sync_nonce']) || !wp_verify_nonce($_POST['elucidario_art_sync_nonce'], 'elucidario_art_sync_nonce')) {
             wp_die('Sem autorização');
         }
 
-        if (current_user_can('wiki_ema_capabilities')) {
+        if (current_user_can('elucidario_art_capabilities')) {
             $args = array(
                 'post_type' => 'obras',
                 'posts_per_page' => -1,
@@ -739,12 +739,12 @@ class Acervo_Emak
      * @since 0.15
      * @version 0.1
      */
-    public function wiki_ema_atualiza_todos_cpts()
+    public function elucidario_art_atualiza_todos_cpts()
     {
-        if (!isset($_POST['wiki_ema_update_nonce']) || !wp_verify_nonce($_POST['wiki_ema_update_nonce'], 'wiki_ema_update_nonce')) {
+        if (!isset($_POST['elucidario_art_update_nonce']) || !wp_verify_nonce($_POST['elucidario_art_update_nonce'], 'elucidario_art_update_nonce')) {
             wp_die('Sem autorização');
         }
-        if (current_user_can('wiki_ema_capabilities')) {
+        if (current_user_can('elucidario_art_capabilities')) {
             $obrasargs = array(
                 'post_type' => 'obras',
                 'posts_per_page' => -1,
@@ -890,30 +890,30 @@ class Acervo_Emak
     }
 
     /**
-     * Load dos scripts para funcionamento adequado do plugin Wiki-Ema
+     * Load dos scripts para funcionamento adequado do plugin elucidario-art
      *
      * @param [type] $hook
      * @return void
      */
-    public function wiki_ema_load_scripts($hook)
+    public function elucidario_art_load_scripts($hook)
     {
-        global $wiki_ema_admin;
+        global $elucidario_art_admin;
 
-        if ($hook != $wiki_ema_admin) {
+        if ($hook != $elucidario_art_admin) {
             return;
         }
 
         $version = rand(0, 999);
-        wp_enqueue_script('wiki_ema_admin', plugin_dir_url(__FILE__) . 'js/wiki-ema-admin.js', 'jquery', $version, true);
-        wp_localize_script('wiki_ema_admin', 'wiki_ema_sync_vars', array(
-            'wiki_ema_sync_nonce' => wp_create_nonce('wiki_ema_sync_nonce'),
+        wp_enqueue_script('elucidario_art_admin', plugin_dir_url(__FILE__) . 'js/elucidario-art-admin.js', 'jquery', $version, true);
+        wp_localize_script('elucidario_art_admin', 'elucidario_art_sync_vars', array(
+            'elucidario_art_sync_nonce' => wp_create_nonce('elucidario_art_sync_nonce'),
         ));
-        wp_localize_script('wiki_ema_admin', 'wiki_ema_update_vars', array(
-            'wiki_ema_update_nonce' => wp_create_nonce('wiki_ema_update_nonce'),
+        wp_localize_script('elucidario_art_admin', 'elucidario_art_update_vars', array(
+            'elucidario_art_update_nonce' => wp_create_nonce('elucidario_art_update_nonce'),
         ));
 
-        wp_register_style('wiki_ema_styles', plugins_url('wiki-ema/css/styles.css'));
-        wp_enqueue_style('wiki_ema_styles');
+        wp_register_style('elucidario_art_styles', plugins_url('elucidario-art/css/styles.css'));
+        wp_enqueue_style('elucidario_art_styles');
 
     }
 
@@ -927,7 +927,7 @@ class Acervo_Emak
      * @return $meta-boxes
      */
     /** Obra metabox */
-    public function wiki_ema_obra_metabox($meta_boxes)
+    public function elucidario_art_obra_metabox($meta_boxes)
     {
         $prefix = 'obra-metabox_';
         $meta_boxes[] =
@@ -997,7 +997,7 @@ class Acervo_Emak
         return $meta_boxes;
     }
     /** Autor metabox */
-    public function wiki_ema_autor_metabox($meta_boxes)
+    public function elucidario_art_autor_metabox($meta_boxes)
     {
         $prefix = 'autor-metabox_';
         $meta_boxes[] =
@@ -1052,7 +1052,7 @@ class Acervo_Emak
      *
      * @since 0.8
      */
-    public function wiki_ema_cria_relacoes()
+    public function elucidario_art_cria_relacoes()
     {
         MB_Relationships_API::register(
             array(
@@ -1106,7 +1106,7 @@ class Acervo_Emak
      * @since 0.14
      * @return void
      */
-    public function wiki_ema_admin_bar_link()
+    public function elucidario_art_admin_bar_link()
     {
         global $wp_admin_bar;
         global $post;
@@ -1129,7 +1129,7 @@ class Acervo_Emak
      * faz a validação se as páginas existem ou não
      * @return boolean
      */
-    public function wiki_ema_the_slug_exists($post_name, $post_type)
+    public function elucidario_art_the_slug_exists($post_name, $post_type)
     {
         global $wpdb;
         if ($wpdb->get_row("SELECT post_name FROM wp_posts WHERE post_name = '" . $post_name . "' AND post_type = '" . $post_type . "'", 'ARRAY_A')) {
@@ -1146,10 +1146,10 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function wiki_ema_cria_paginas()
+    public function elucidario_art_cria_paginas()
     {
         /**
-         * Verifica se Ambientes exitem nas páginas especiais do CPT wiki_ema, se não existir
+         * Verifica se Ambientes exitem nas páginas especiais do CPT elucidario_art, se não existir
          * cria a página.
          */
         $current_user = wp_get_current_user();
@@ -1157,13 +1157,13 @@ class Acervo_Emak
         /**
          * Cria página Ambientes
          */
-        if (!$this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
+        if (!$this->elucidario_art_the_slug_exists('ambientes', 'elucidario_art')) {
             $pag_ambientes = array(
                 'post_title' => 'Ambientes',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type' => 'wiki_ema',
+                'post_type' => 'elucidario_art',
             );
             wp_insert_post($pag_ambientes);
         }
@@ -1171,13 +1171,13 @@ class Acervo_Emak
         /**
          * Cria página Classificações
          */
-        if (!$this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
+        if (!$this->elucidario_art_the_slug_exists('classificacoes', 'elucidario_art')) {
             $pag_classificacoes = array(
                 'post_title' => 'Classificações',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type' => 'wiki_ema',
+                'post_type' => 'elucidario_art',
             );
             wp_insert_post($pag_classificacoes);
         }
@@ -1185,14 +1185,14 @@ class Acervo_Emak
         /**
          * Cria páginas Núcleos
          */
-        if (!$this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
+        if (!$this->elucidario_art_the_slug_exists('nucleos', 'elucidario_art')) {
             echo 'criando nova página.';
             $pag_nucleos = array(
                 'post_title' => 'Núcleos',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type' => 'wiki_ema',
+                'post_type' => 'elucidario_art',
             );
             wp_insert_post($pag_nucleos);
         }
@@ -1200,13 +1200,13 @@ class Acervo_Emak
         /**
          * Cria página Ema-Klabin
          */
-        if (!$this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
+        if (!$this->elucidario_art_the_slug_exists('ema-klabin', 'elucidario_art')) {
             $pag_emaklabin = array(
                 'post_title' => 'Ema Klabin',
                 'post_content' => '',
                 'post_status' => 'publish',
                 'post_author' => $current_user->ID,
-                'post_type' => 'wiki_ema',
+                'post_type' => 'elucidario_art',
             );
             wp_insert_post($pag_emaklabin);
         }
@@ -1215,22 +1215,22 @@ class Acervo_Emak
     /**
      * Deleta Páginas na desativação do plugin
      */
-    public function wiki_ema_deleta_paginas()
+    public function elucidario_art_deleta_paginas()
     {
-        if ($this->wiki_ema_the_slug_exists('ambientes', 'wiki_ema')) {
-            $pag_ambientes_rmv = get_page_by_path('ambientes', 'OBJECT', 'wiki_ema');
+        if ($this->elucidario_art_the_slug_exists('ambientes', 'elucidario_art')) {
+            $pag_ambientes_rmv = get_page_by_path('ambientes', 'OBJECT', 'elucidario_art');
             wp_delete_post($pag_ambientes_rmv->ID, true);
         }
-        if ($this->wiki_ema_the_slug_exists('classificacoes', 'wiki_ema')) {
-            $pag_classificacoes_rmv = get_page_by_path('classificacoes', 'OBJECT', 'wiki_ema');
+        if ($this->elucidario_art_the_slug_exists('classificacoes', 'elucidario_art')) {
+            $pag_classificacoes_rmv = get_page_by_path('classificacoes', 'OBJECT', 'elucidario_art');
             wp_delete_post($pag_classificacoes_rmv->ID, true);
         }
-        if ($this->wiki_ema_the_slug_exists('nucleos', 'wiki_ema')) {
-            $pag_nucleos_rmv = get_page_by_path('nucleos', 'OBJECT', 'wiki_ema');
+        if ($this->elucidario_art_the_slug_exists('nucleos', 'elucidario_art')) {
+            $pag_nucleos_rmv = get_page_by_path('nucleos', 'OBJECT', 'elucidario_art');
             wp_delete_post($pag_nucleos_rmv->ID, true);
         }
-        if ($this->wiki_ema_the_slug_exists('ema-klabin', 'wiki_ema')) {
-            $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'wiki_ema');
+        if ($this->elucidario_art_the_slug_exists('ema-klabin', 'elucidario_art')) {
+            $pag_emaklabin_rmv = get_page_by_path('ema-klabin', 'OBJECT', 'elucidario_art');
             wp_delete_post($pag_emaklabin_rmv->ID, true);
         }
     }
@@ -1241,12 +1241,12 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function wiki_ema_registra_capacidades()
+    public function elucidario_art_registra_capacidades()
     {
         $editor = get_role('editor');
         $admin = get_role('administrator');
-        $editor->add_cap('wiki_ema_capabilities');
-        $admin->add_cap('wiki_ema_capabilities');
+        $editor->add_cap('elucidario_art_capabilities');
+        $admin->add_cap('elucidario_art_capabilities');
     }
 
     /**
@@ -1256,12 +1256,12 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function wiki_ema_deleta_capacidades()
+    public function elucidario_art_deleta_capacidades()
     {
         $editor = get_role('editor');
         $admin = get_role('administrator');
-        $editor->remove_cap('wiki_ema_capabilities');
-        $admin->remove_cap('wiki_ema_capabilities');
+        $editor->remove_cap('elucidario_art_capabilities');
+        $admin->remove_cap('elucidario_art_capabilities');
     }
 
     /**
@@ -1269,27 +1269,27 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function wiki_ema_activacao()
+    public function elucidario_art_activacao()
     {
         /**
          * Função para Criar Páginas na ativação do plugin
          */
-        self::wiki_ema_cria_paginas();
+        self::elucidario_art_cria_paginas();
 
         /**
          * Função para registrar as capacidades nos usuários
          */
-        self::wiki_ema_registra_capacidades();
+        self::elucidario_art_registra_capacidades();
 
         /**
          * Função para registrar os CPTs
          */
-        self::wiki_ema_register_post_type();
+        self::elucidario_art_register_post_type();
 
         /**
          * Função para registrar as taxonomias
          */
-        self::wiki_ema_register_taxonomies();
+        self::elucidario_art_register_taxonomies();
         
         flush_rewrite_rules();
     }
@@ -1299,18 +1299,18 @@ class Acervo_Emak
      *
      * @return void
      */
-    public function wiki_ema_desativacao()
+    public function elucidario_art_desativacao()
     {
 
         /**
          * Função para Deleta Páginas na desativação do plugin
          */
-        self::wiki_ema_deleta_paginas();
+        self::elucidario_art_deleta_paginas();
 
         /**
          * Função para deletar capacidades dos usuários na desativação do plugin
          */
-        self::wiki_ema_deleta_capacidades();
+        self::elucidario_art_deleta_capacidades();
 
         /**
          * rewrite

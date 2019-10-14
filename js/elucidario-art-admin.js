@@ -1,11 +1,11 @@
 jQuery(document).ready(function ($) {
 
-    $('#wiki-ema-sync-form-admin').submit(function () {
+    $('#elucidario-art-sync-form-admin').submit(function () {
         $('#spinner_sync').show();
         $('#sync_button').attr('disabled', true);
         data = {
-            action: 'wiki_ema_sincroniza_autor_obra',
-            wiki_ema_sync_nonce: wiki_ema_sync_vars.wiki_ema_sync_nonce
+            action: 'elucidario_art_sincroniza_autor_obra',
+            elucidario_art_sync_nonce: elucidario_art_sync_vars.elucidario_art_sync_nonce
         };
 
         $.post(ajaxurl , data, function(resposta){
@@ -17,12 +17,12 @@ jQuery(document).ready(function ($) {
         return false;
     });
 
-    $('#wiki-ema-update-form-admin').submit(function () {
+    $('#elucidario-art-update-form-admin').submit(function () {
         $('#spinner_update').show();
         $('#update_button').attr('disabled', true);
         data = {
-            action: 'wiki_ema_atualiza_todos_cpts',
-            wiki_ema_update_nonce: wiki_ema_update_vars.wiki_ema_update_nonce
+            action: 'elucidario_art_atualiza_todos_cpts',
+            elucidario_art_update_nonce: elucidario_art_update_vars.elucidario_art_update_nonce
         };
 
         $.post(ajaxurl , data, function(resposta){

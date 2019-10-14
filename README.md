@@ -1,12 +1,14 @@
-# Acervo
-
-visualização do acervo Ema Klabin
-versão `0.27`
+# Elucidário.art
+Visualização do acervo Ema Klabin
+versão `0.28`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.28`
+- mudança de nome para Elucidário.art
 
 ## `0.27`
 - const PLUGIN_NAME e PLUGIN_URI adicionadas
