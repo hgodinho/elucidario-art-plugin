@@ -2,8 +2,8 @@
 /**
  * Plugin Name:  Elucidário.art
  * Plugin URI:   https://emaklabin.org.br/explore
- * Description:  Visualização do Acervo Ema Klabin
- * Version:      0.28
+ * Description:  Visualização da Coleção Ema Klabin
+ * Version:      0.29
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  eludidario-art-plugin
@@ -19,7 +19,8 @@ require_once dirname(__FILE__) . '/acf/acf.php';
 /**
  * Constantes
  */
-const PLUGIN_VERSION = "0.28";
+
+const PLUGIN_VERSION = "0.29";
 const PLUGIN_NAME = "Elucidário.art";
 const PLUGIN_URI = "elucidario-art";
 const TEXT_DOMAIN = "eludidario-art-plugin";
