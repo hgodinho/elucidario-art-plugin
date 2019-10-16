@@ -19,7 +19,7 @@ require_once dirname(__FILE__) . '/acf/acf.php';
 /**
  * Constantes
  */
-const PLUGIN_VERSION = "0.27";
+const PLUGIN_VERSION = "0.28";
 const PLUGIN_NAME = "Elucidário.art";
 const PLUGIN_URI = "elucidario-art";
 const TEXT_DOMAIN = "eludidario-art-plugin";
@@ -29,7 +29,7 @@ const TEXT_DOMAIN = "eludidario-art-plugin";
  *
  * Cria custom-post-types, custom-taxonomies, invoca os plugins requeridos e mais...
  */
-class Acervo_Emak
+class Elucidario_Art_Emak
 {
     private static $instance;
 
@@ -61,8 +61,8 @@ class Acervo_Emak
         add_action('admin_menu', array($this, 'elucidario_art_custom_menu_admin_page'));
 
         /** adiciona as actions ds post-types e das taxonomies */
-        add_action('init', 'Acervo_Emak::elucidario_art_register_post_type');
-        add_action('init', 'Acervo_Emak::elucidario_art_register_taxonomies');
+        add_action('init', 'Elucidario_Art_Emak::elucidario_art_register_post_type');
+        add_action('init', 'Elucidario_Art_Emak::elucidario_art_register_taxonomies');
 
         /**
          * Arruma admin columns
@@ -545,7 +545,7 @@ class Acervo_Emak
         /** registra Classificação para Obras */
         register_taxonomy(
             'classificacao',
-            array('Acervo_emak'),
+            array('Elucidario_Art_Emak'),
             array(
                 'labels' => array(
                     'name' => __('Classificação'),
@@ -578,7 +578,7 @@ class Acervo_Emak
         /** registra Núcleos para Obras */
         register_taxonomy(
             'nucleo',
-            array('Acervo_emak'),
+            array('Elucidario_Art_Emak'),
             array(
                 'labels' => array(
                     'name' => __('Núcleos'),
@@ -611,7 +611,7 @@ class Acervo_Emak
         /** registra Ambientes para Obras */
         register_taxonomy(
             'ambiente',
-            array('Acervo_emak'),
+            array('Elucidario_Art_Emak'),
             array(
                 'labels' => array(
                     'name' => __('Ambientes'),
@@ -1322,4 +1322,4 @@ class Acervo_Emak
 /**
  * instancias
  */
-Acervo_Emak::getInstance();
+Elucidario_Art_Emak::getInstance();
