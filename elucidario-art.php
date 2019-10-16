@@ -7,7 +7,7 @@
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  eludidario-art-plugin
- * GitHub Plugin URI: https://github.com/hgodinho/wiki-ema
+ * GitHub Plugin URI: https://github.com/hgodinho/elucidario-art-plugin
  */
 
 /**
