@@ -1,11 +1,14 @@
 # Elucidário.art
 Visualização do acervo Ema Klabin
-versão `0.29`
+versão `0.30`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.30`
+- acréscimo de campo para embed do Google Arts&Culture nos custom fields de obras
 
 ## `0.29`
 - mudança de nome para Eludicidário.art completada.

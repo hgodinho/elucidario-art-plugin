@@ -3,7 +3,7 @@
  * Plugin Name:  Elucidário.art
  * Plugin URI:   https://emaklabin.org.br/explore
  * Description:  Visualização da Coleção Ema Klabin
- * Version:      0.29
+ * Version:      0.30
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  eludidario-art-plugin
