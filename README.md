@@ -1,11 +1,14 @@
 # Elucidário.art
 Visualização do acervo Ema Klabin
-versão `0.30`
+versão `0.31`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.31`
+- Correção do campo de imagem obra do mês nos custom fields de obra
 
 ## `0.30`
 - acréscimo de campo para embed do Google Arts&Culture nos custom fields de obras
