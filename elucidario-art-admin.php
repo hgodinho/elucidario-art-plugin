@@ -8,9 +8,6 @@
 global $elucidario_art_admin;
 ?>
 
-<?php
-?>
-
 <div class="wrap">
     <h2><?php echo PLUGIN_NAME; ?></h2>
     <div class="grid-container">

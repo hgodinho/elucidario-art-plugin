@@ -3,7 +3,7 @@
  * Plugin Name:  Elucidário.art
  * Plugin URI:   https://emaklabin.org.br/explore
  * Description:  Visualização da Coleção Ema Klabin
- * Version:      0.31
+ * Version:      0.32
  * Author:       hgodinho
  * Author URI:   https://hgodinho.com/
  * Text Domain:  eludidario-art-plugin
@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/acf/acf.php';
  * Constantes
  */
 
-const PLUGIN_VERSION = "0.31";
+const PLUGIN_VERSION = "0.32";
 const PLUGIN_NAME = "Elucidário.art";
 const PLUGIN_URI = "elucidario-art";
 const TEXT_DOMAIN = "eludidario-art-plugin";
@@ -904,7 +904,7 @@ class Elucidario_Art_Emak
             return;
         }
 
-        $version = rand(0, 999);
+        $version = PLUGIN_VERSION;
         wp_enqueue_script('elucidario_art_admin', plugin_dir_url(__FILE__) . 'js/elucidario-art-admin.js', 'jquery', $version, true);
         wp_localize_script('elucidario_art_admin', 'elucidario_art_sync_vars', array(
             'elucidario_art_sync_nonce' => wp_create_nonce('elucidario_art_sync_nonce'),
@@ -913,7 +913,7 @@ class Elucidario_Art_Emak
             'elucidario_art_update_nonce' => wp_create_nonce('elucidario_art_update_nonce'),
         ));
 
-        wp_register_style('elucidario_art_styles', plugins_url('elucidario-art/css/styles.css'));
+        wp_register_style('elucidario_art_styles', plugin_dir_url(__FILE__) . 'css/styles.css', '', $version);
         wp_enqueue_style('elucidario_art_styles');
 
     }
