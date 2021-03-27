@@ -7,6 +7,9 @@ versão `0.32`
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
 
+## `0.33`
+- atualização na url de autor em todos os arquivos (hgod.in)
+
 ## `0.32`
 - bug fix na chamada do style.css do admin.php
 

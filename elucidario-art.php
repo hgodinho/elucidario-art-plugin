@@ -5,7 +5,7 @@
  * Description:  Visualização da Coleção Ema Klabin
  * Version:      0.32
  * Author:       hgodinho
- * Author URI:   https://hgodinho.com/
+ * Author URI:   https://hgod.in/
  * Text Domain:  eludidario-art-plugin
  * GitHub Plugin URI: https://github.com/hgodinho/elucidario-art-plugin
  */
