@@ -1,11 +1,14 @@
 # Elucidário.art
 Visualização do acervo Ema Klabin
-versão `0.32`
+versão `0.34`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.34`
+- show_in_rest true nos post-types
 
 ## `0.33`
 - atualização na url de autor em todos os arquivos (hgod.in)

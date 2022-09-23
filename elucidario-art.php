@@ -3,7 +3,7 @@
  * Plugin Name:  Elucidário.art
  * Plugin URI:   https://emaklabin.org.br/explore
  * Description:  Visualização da Coleção Ema Klabin
- * Version:      0.32
+ * Version:      0.34
  * Author:       hgodinho
  * Author URI:   https://hgod.in/
  * Text Domain:  eludidario-art-plugin
@@ -20,7 +20,7 @@ require_once dirname(__FILE__) . '/acf/acf.php';
  * Constantes
  */
 
-const PLUGIN_VERSION = "0.32";
+const PLUGIN_VERSION = "0.34";
 const PLUGIN_NAME = "Elucidário.art";
 const PLUGIN_URI = "elucidario-art";
 const TEXT_DOMAIN = "eludidario-art-plugin";
@@ -399,6 +399,7 @@ class Elucidario_Art_Emak
                 'public' => true,
                 'publicly_queryable' => true,
                 'show_in_menu' => false,
+                'show_in_rest' => true,
                 'has_archive' => true,
                 'rewrite' => array(
                     'slug' => 'obras',
@@ -452,6 +453,7 @@ class Elucidario_Art_Emak
                 'public' => true,
                 'publicly_queryable' => true,
                 'show_in_menu' => false,
+                'show_in_rest' => true,
                 'has_archive' => true,
                 'hierarchical' => true,
                 'rewrite' => array(
@@ -654,7 +656,7 @@ class Elucidario_Art_Emak
         $menu_title = __(PLUGIN_NAME, TEXT_DOMAIN);
         $capability = 'manage_options';
         $menu_slug = PLUGIN_URI . '/elucidario-art-admin';
-        $function = array($this, 'elucidario_art_template_plugin_admin');
+        $function = array(self, 'elucidario_art_template_plugin_admin');
         $dashicon = 'dashicons-admin-customizer';
         $position = 3;
 
