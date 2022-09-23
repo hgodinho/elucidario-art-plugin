@@ -1,11 +1,14 @@
 # Elucidário.art
 Visualização do acervo Ema Klabin
-versão `0.34`
+versão `0.35`
 
 # Changelog
 
 [keep a changelog](https://keepachangelog.com/en/1.0.0/)
 [versionamento semântico](https://semver.org/lang/pt-BR/)
+
+## `0.35`
+- correção bug método estático
 
 ## `0.34`
 - show_in_rest true nos post-types
