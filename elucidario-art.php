@@ -654,7 +654,7 @@ class Elucidario_Art_Emak
     {
         $page_title = __(PLUGIN_NAME, TEXT_DOMAIN);
         $menu_title = __(PLUGIN_NAME, TEXT_DOMAIN);
-        $capability = 'manage_options';
+        $capability = 'edit_posts';
         $menu_slug = PLUGIN_URI . '/elucidario-art-admin';
         $function = array($this, 'elucidario_art_template_plugin_admin');
         $dashicon = 'dashicons-admin-customizer';
